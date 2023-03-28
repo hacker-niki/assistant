@@ -1,6 +1,9 @@
 import pyttsx3
 import speech_recognition as sr
 import datetime
+from functions import extract_city
+from functions import get_weather
+
 
 class Assistant:
     def __init__(self):
@@ -10,6 +13,8 @@ class Assistant:
         # Устанавливаем голос для синтеза речи
         voices = self.engine.getProperty('voices')
         self.engine.setProperty('voice', voices[0].id)
+
+        self.speak("Здарова, Меченый!")
 
     def run(self):
         # Главный цикл программы
@@ -24,6 +29,7 @@ class Assistant:
         self.engine.runAndWait()
 
     # Функция для распознавания речи
+
     def recognize_speech(self):
         r = sr.Recognizer()
         with sr.Microphone() as source:
@@ -40,13 +46,17 @@ class Assistant:
     # Функция для выполнения команд
     def process_command(self, command):
         if "привет" in command.lower():
-            self.speak("Привет! Как дела?")
+            self.speak("Хабар принес?")
         elif "как дела" in command.lower():
-            self.speak("У меня все хорошо, спасибо. А у тебя?")
+            self.speak("Можно и передохнуть маленько")
         elif "который час" in command.lower():
             now = datetime.datetime.now()
             self.speak("Сейчас " + str(now.hour) + ":" + str(now.minute))
+        elif extract_city(command) is not None:
+            self.speak(get_weather(extract_city(command)))
+            # print("погода")
         elif "стоп" in command.lower():
-            self.speak("До свидания!")
+            self.speak("Ну, удачной охоты, сталкер.")
             return True
+        self.speak("Иди своей дорогой, сталкер!")
         return False
