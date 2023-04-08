@@ -32,18 +32,22 @@ def get_weather_function(city: str):
         return "Извините, я не смог получить информацию о погоде в этом городе."
 
 
-def hello_function() -> str:
+def hello_function(a) -> str:
     return "Хабар принес?"
 
 
-def doing_function() -> str:
+def doing_function(a) -> str:
     return "Можно и передохнуть маленько"
 
 
-def time_function() -> str:
+def time_function(a) -> str:
     now = datetime.datetime.now()
     return "Сейчас " + str(now.hour) + ":" + str(now.minute)
 
 
-def stop_function() -> str:
+def stop_function(a) -> str:
     return "Ну, удачной охоты, сталкер."
+
+
+def default_function(a) -> str:
+    return "Не удалось распознать команду."

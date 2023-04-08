@@ -1,22 +1,22 @@
 import pyttsx3
 import speech_recognition as sr
-import TextHandler
+import textHandler
 
 
 class Assistant:
     def __init__(self):
         # Создаем объект для синтеза речи
         self.engine = pyttsx3.init()
-
-        voices = self.engine.getProperty('voices')
-        self.engine.setProperty('voice', voices[2].id)
+        self.handler = textHandler.TextHandler()
+        self.voices = self.engine.getProperty('voices')
+        self.engine.setProperty('voice', self.voices[2].id)
 
         self.speak("Здарова, Меченый!")
 
     def run(self):
         while True:
             command = self.recognize_speech()
-            if self.process_command(command):
+            if not self.process_command(command):
                 break
 
     # Функция для воспроизведения речи
@@ -40,6 +40,7 @@ class Assistant:
                 return ""
 
     # Функция для выполнения команд
-    def process_command(self, command):
-
-        return False
+    def process_command(self, command) -> bool:
+        result = self.handler.map_string_to_function(input_string=command)
+        self.speak(result[1])
+        return result[0]
