@@ -5,8 +5,8 @@ class Translation():
     """
     Получение вшитого в приложение перевода строк для создания мультиязычного ассистента
     """
-    with open("translations.json", "r", encoding="UTF-8") as file:
-        translations = json.load(file)
+    '''with open("translations.json", "r", encoding="UTF-8") as file:
+        translations = json.load(file)'''
 
     def get(self, text: str, speech_language):
         """
