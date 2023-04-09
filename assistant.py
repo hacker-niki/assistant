@@ -13,6 +13,7 @@ class Assistant:
 
         self.speak("Здарова, Меченый!")
 
+
     def run(self):
         while True:
             command = self.recognize_speech()
