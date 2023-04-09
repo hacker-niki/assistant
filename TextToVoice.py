@@ -1,8 +1,10 @@
 # assistant
 import pyttsx3
 
-def text_to_speech(text, voice='english', rate=150):
-    engine = pyttsx3.init()
-    engine.setProperty('rate', rate)
-    engine.say(text)
-    engine.runAndWait()
+class TextToVoice:
+    def __init__(self):
+        self.engine = pyttsx3.init()
+
+    def text_to_voice(self, text):
+        self.engine.say(text)
+        self.engine.runAndWait()
