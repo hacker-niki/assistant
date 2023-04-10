@@ -51,3 +51,22 @@ def stop_function(a) -> str:
 
 def default_function(a) -> str:
     return "Не удалось распознать команду."
+
+
+def mood_function(a) -> str:
+    return  "Какие дела могут быть у робота? Не крашнулся и то хорошо"
+
+
+def joke_function(a) -> str:
+    return "Колобок повесился, ахаххаха"
+
+
+def commands_function(a) -> str:
+    return "Пока что я могу: найти информацию в интернете, рассказать анектод, сказать сколько сейчас времени, поприветсвовать вас, попрощаться с кожанным, также вы можете поинтересоваться как у меня дела"
+
+
+def search_function(a)->str:
+    sentence = ' '.join(a);
+    for url in search(sentence, num_results=1):
+        webbrowser.open(url)
+        break
