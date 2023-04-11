@@ -10,7 +10,7 @@ class TextHandler:
 
     # Возвращает текст, который возвращают вызываемые функции и true если нужно продолжить работу
     # False если завершить
-    def map_string_to_function(self, input_string: str) -> [bool, str]:
+    def map_string_to_function(self, input_string: str) -> list:
         words = input_string.split()
         if len(words) == 0:
             function_to_call = getattr(functions, 'default_function')
@@ -18,7 +18,8 @@ class TextHandler:
             first_word = words[0].lower()
             for variants in self.function_map.items():
                 if first_word in variants[1]:
-                    function_to_call = getattr(functions, variants[0] + '_function')
+                    function_to_call = getattr(
+                        functions, variants[0] + '_function')
                     if variants[0] == "stop":
                         return [False, function_to_call(words[1:])]
                     return [True, function_to_call(words[1:])]
