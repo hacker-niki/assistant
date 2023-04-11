@@ -10,10 +10,7 @@ class Assistant:
         self.handler = textHandler.TextHandler()
         self.audio = audioProcessor.AudioProcessor()
         self.audio.answer_text_to_audio("Здарова, Меченый!")
-<<<<<<< HEAD
         self.handler = textHandler.TextHandler()
-=======
->>>>>>> 4f883dea4867365920cf61f2d1053ec5f962d0ff
 
     def run(self):
         while True:
@@ -21,10 +18,7 @@ class Assistant:
             answer = self.handler.map_string_to_function(command)
             if not answer[0]:
                 break
-<<<<<<< HEAD
             self.audio.answer_text_to_audio(answer[1])
-=======
->>>>>>> 4f883dea4867365920cf61f2d1053ec5f962d0ff
 
     # Функция для распознавания речи
 

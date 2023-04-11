@@ -13,7 +13,7 @@ class AudioProcessor():
 
         try:
             text = self.recognizer.recognize_google(audio, language="ru-Ru")
-            return str(texts)
+            return str(text)
         except sr.RequestError:
             print("Что-то с интернетом(( Проверьте подключение, пожалуйста")
             return ""
