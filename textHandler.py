@@ -8,7 +8,8 @@ class TextHandler:
             self.function_map = json.load(f, object_hook=dict)
             f.close()
 
-    # Возвращает функци
+    # Возвращает текст, который возвращают вызываемые функции и true если нужно продолжить работу
+    # False если завершить
     def map_string_to_function(self, input_string: str) -> [bool, str]:
         words = input_string.split()
         if len(words) == 0:
