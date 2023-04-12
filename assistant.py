@@ -2,6 +2,7 @@ import pyttsx3
 import speech_recognition as sr
 import textHandler
 import audioProcessor
+import user
 
 
 class Assistant:
@@ -11,6 +12,7 @@ class Assistant:
         self.audio = audioProcessor.AudioProcessor()
         self.audio.answer_text_to_audio("Здарова, Меченый!")
         self.handler = textHandler.TextHandler()
+        
 
     def run(self):
         while True:
