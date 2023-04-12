@@ -6,6 +6,9 @@ import webbrowser
 import speech_recognition as sr
 import pyttsx3
 import user
+from user import User
+from user import client
+from audioProcessor import AudioProcessor
 
 def extract_city_function(command: str):
     pattern = r"погода в ([\w\s]+)"
@@ -91,37 +94,39 @@ def youtube_function(a)->str:
         return "Не удалось открыть"
 
 def settings_function(a)->str:
-    engine = pyttsx3.init()
-    engine.say("Скажите как вас зовут")
-    engine.runAndWait()
+    settings = AudioProcessor()
+
+    settings.answer_text_to_audio("Выберете что вы хотите поменять: имя, пол, основной язык, дополнительный язык, город")
     audio = recognize_speech()
-    name = audio_to_text(audio)
+    parametr = settings.audio_to_text(audio)
 
-    engine.say("Скажите какого вы пола")
-    engine.runAndWait()
-    audio = recognize_speech()
-    sex = audio_to_text(audio)
+    if parametr == "имя":
+        settings.answer_text_to_audio("Скажите как вас зовут")
+        audio = recognize_speech()
+        name = settings.audio_to_text(audio)
+        client.name = name
+    elif parametr == "пол":
+        settings.answer_text_to_audio("Скажите какого вы пола")
+        audio = recognize_speech()
+        sex = settings.audio_to_text(audio)
+        client.sex = sex
+    elif parametr == "основной язык":
+        settings.answer_text_to_audio("Каким будет ваш основной язык")
+        audio = recognize_speech()
+        language = settings.audio_to_text(audio)
+        client.language = language
+    elif parametr == "дополнительный язык":
+        settings.answer_text_to_audio("Каким будет ваш дополнительный язык")
+        audio = recognize_speech()
+        second_language = settings.audio_to_text(audio)
+        client.secondLanguage = second_language
+    elif parametr == "город":
+        settings.answer_text_to_audio("Каким будет ваш город")
+        audio = recognize_speech()
+        town = settings.audio_to_text(audio)
+        client.town = town
 
-    engine.say("Каким будет ваш основной язык")
-    engine.runAndWait()
-    audio = recognize_speech()
-    language = audio_to_text(audio)
-
-
-    engine.say("Каким будет ваш дополнительный язык")
-    engine.runAndWait()
-    audio = recognize_speech()
-    second_language = audio_to_text(audio)
-
-    engine.say("В каком городе вы живете?")
-    engine.runAndWait()
-    audio = recognize_speech()
-    town = audio_to_text(audio)
-
-    user = user.User(name, sex, language, second_language, town)
-
-    engine.say("Пользователь успешно добавлен")
-    engine.runAndWait()
+    settings.answer_text_to_audio("Изменения были успешно введены")
 
 def recognize_speech():
     r = sr.Recognizer()
@@ -130,7 +135,3 @@ def recognize_speech():
         audio = r.listen(source, phrase_time_limit=5)
         return audio
 
-def audio_to_text(audio):
-    r = sr.Recognizer()
-    text = r.recognize_google(audio, language="ru-Ru")
-    return str(text)
