@@ -79,7 +79,9 @@ def search_function(a) -> str:  # type: ignore
         return "Не удалось открыть"
     
 def youtube_function(a)->str:
-    sentence = ' '.join(a)
+    sentence:str = ""
+    for i in a:
+        sentence += ' ' + i
     print(sentence)
     url = "https://www.youtube.com/results?search_query=" + sentence
     try:
@@ -111,7 +113,12 @@ def settings_function(a)->str:
     audio = recognize_speech()
     second_language = audio_to_text(audio)
 
-    user = User(name, sex, language, second_language)
+    engine.say("В каком городе вы живете?")
+    engine.runAndWait()
+    audio = recognize_speech()
+    town = audio_to_text(audio)
+
+    user = user.User(name, sex, language, second_language, town)
 
     engine.say("Пользователь успешно добавлен")
     engine.runAndWait()

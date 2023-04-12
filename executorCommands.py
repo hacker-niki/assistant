@@ -27,6 +27,6 @@ class Recognizer:
             # Используем Vosk
             with sr.Microphone() as source:
                 audio = self.recognizer.listen(source)
-                text = self.recognizer.recognize_vosk(audio, )
+                text = self.recognizer.recognize_vosk(audio)
 
         return text
