@@ -1,12 +1,14 @@
 import datetime
 import re
 import requests
+import time
+from googletrans import Translator, constants
+import pyautogui as pg
+import keyboard
 import webbrowser
+from playsound import playsound
 import speech_recognition as sr
 import pyttsx3
-import user
-
-from googletrans import Translator, constants
 from user import User
 from user import client
 from audioProcessor import AudioProcessor
@@ -60,6 +62,34 @@ def stop_function(a) -> str:
 def default_function(a) -> str:
     return "Не удалось распознать команду."
 
+def spotify_function(a)->str:
+    #открывает и ищет в Spotify через браузер
+    sentence: str = ""
+    for i in a:
+        sentence += i
+    print(sentence)
+    url = "https://open.spotify.com/search/" + sentence
+    webbrowser.get().open(url)
+    time.sleep(2)
+
+def launch_desktop_spotify(a)->str:
+    #запуск десктопного приложения Spotify и запуск существующей песни
+    sentence:str = ""
+    for i in a:
+        sentence += i
+    print(sentence)
+    pg.moveTo(250, 1050)
+    pg.click()
+    time.sleep(1)
+    try:
+        keyboard.write("spotify")
+        keyboard.send("enter")
+        time.sleep(3)
+        keyboard.press(" ")
+        return "Открываю спотифай"
+    except FileNotFoundError:
+        return "Не удалось открыть, пробую открыть через браузер"
+
 
 def mood_function(a) -> str:
     return "Какие дела могут быть у робота? Не крашнулся и то хорошо"
@@ -76,12 +106,12 @@ def commands_function(a) -> str:
 def search_function(a) -> str:  # type: ignore
     sentence:str = ""
     for i in a:
-        sentence += ' ' + i
+        sentence += i + ' '
     try:
         webbrowser.open_new_tab("https://www.google.com/search?q="+sentence)
         return "Открываю браузер"
     except:
-        return "Не удалось открыть"
+        return "Не удалось открыть браузер"
     
 def youtube_function(a)->str:
     sentence:str = ""
