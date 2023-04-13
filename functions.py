@@ -83,7 +83,7 @@ def launch_desktop_spotify(a)->str:
         keyboard.press(" ")
         return "Открываю спотифай"
     except FileNotFoundError:
-    return "Не удалось открыть, пробую открыть через браузер"
+        return "Не удалось открыть, пробую открыть через браузер"
 
 
 
