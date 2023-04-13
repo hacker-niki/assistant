@@ -1,7 +1,12 @@
 import datetime
 import re
 import requests
+import time
 from googletrans import Translator, constants
+import pyautogui as pg
+import keyboard
+import webbrowser
+from playsound import playsound
 
 
 def extract_city_function(command: str):
@@ -51,3 +56,37 @@ def stop_function(a) -> str:
 
 def default_function(a) -> str:
     return "Не удалось распознать команду."
+
+def spotify_function(a)->str:
+    #открывает и ищет в Spotify через браузер
+    sentence: str = ""
+    for i in a:
+        sentence += i
+    print(sentence)
+    url = "https://open.spotify.com/search/" + sentence
+    webbrowser.get().open(url)
+    time.sleep(2)
+
+def launch_desktop_spotify(a)->str:
+    #запуск десктопного приложения Spotify и запуск существующей песни
+    sentence:str = ""
+    for i in a:
+        sentence += i
+    print(sentence)
+    pg.moveTo(250, 1050)
+    pg.click()
+    time.sleep(1)
+    try:
+        keyboard.write("spotify")
+        keyboard.send("enter")
+        time.sleep(3)
+        keyboard.press(" ")
+        return "Открываю спотифай"
+    except FileNotFoundError:
+    return "Не удалось открыть, пробую открыть через браузер"
+
+
+
+
+
+
