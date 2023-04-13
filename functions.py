@@ -86,6 +86,22 @@ def launch_desktop_spotify(a)->str:
         return "Не удалось открыть, пробую открыть через браузер"
 
 
+def find_inf_in_Chrome(a)->str:
+    #Функция поиска в Google Chrome
+    sentence:str = ""
+    for i in a:
+        if(i==' '):
+            i='+'
+        sentence += i
+    print(sentence)
+    url = "https://google.com/?q=" + sentence
+    try:
+        webbrowser.get().open(url)
+        time.sleep(2)
+        keyboard.send("enter")
+        return "Выполняю поиск"
+    except:
+        return "Не удалось открыть браузер"
 
 
 
