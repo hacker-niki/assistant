@@ -10,6 +10,7 @@ from googletrans import Translator, constants
 from user import User
 from user import client
 from audioProcessor import AudioProcessor
+import pyautogui
 
 def extract_city_function(command: str):
     pattern = r"погода в ([\w\s]+)"
@@ -136,3 +137,18 @@ def recognize_speech():
         audio = r.listen(source, phrase_time_limit=5)
         return audio
 
+
+def repeat_function(a)->str:
+    sentence = ' '.join(a)
+    repeat = AudioProcessor()
+    repeat.answer_text_to_audio(sentence)
+
+def app_function(a)->str:
+    sentence = ' '.join(a)
+    settings = AudioProcessor()
+    settings.answer_text_to_audio("Скажите название приложения")
+    audio = recognize_speech()
+    text = settings.audio_to_text(audio)
+    pyautogui.press("win")
+    pyautogui.typewrite(text)
+    pyautogui.press("enter")
