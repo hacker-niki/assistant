@@ -12,7 +12,6 @@ class Assistant:
         self.audio = audioProcessor.AudioProcessor()
         self.audio.answer_text_to_audio("Здарова, Меченый!")
         self.handler = textHandler.TextHandler()
-        
 
     def run(self):
         while True:
@@ -28,7 +27,7 @@ class Assistant:
         r = sr.Recognizer()
         with sr.Microphone() as source:
             print("Говорите...")
-            audio = r.listen(source, phrase_time_limit=5)
+            audio = r.listen(source, phrase_time_limit=3)
             return self.audio.audio_to_text(audio=audio)
 
     # Функция для выполнения команд
