@@ -5,6 +5,10 @@ import os
 import wave
 import json
 import traceback
+import user
+
+import assistant
+
 
 class AudioProcessor():
     
@@ -12,7 +16,7 @@ class AudioProcessor():
         self.recognizer = sr.Recognizer()
         self.engine = pyttsx3.init()
 
-    def use_offline_recognition(language):
+    def use_offline_recognition(self, language):
         recognized_data = ""
         try:
             # проверка наличия модели на нужном языке в каталоге приложения
@@ -62,7 +66,7 @@ class AudioProcessor():
 
         return recognized_data
 
-    def audio_to_text(self, audio):
+    def audio_to_text(self, audio, language):
         # функция перевода аудио в текст
 
         # запишем аудио в файл для перевода в текст через vosk
@@ -73,8 +77,14 @@ class AudioProcessor():
             text = self.recognizer.recognize_google(audio, language="ru-Ru")
             return str(text)
         except sr.RequestError:
-            print("Что-то с интернетом(( Проверьте подключение, пожалуйста")
-            return ""
+            print("распознавание через Vosk:")
+            try:
+                text = self.use_offline_recognition(language)
+                # print(text)
+                return str(text)
+            except sr.UnknownValueError:
+                print("Не расслышал, что Вы сказали. Повторите")
+                return ""
         except sr.UnknownValueError:
             print("Не расслышал, что Вы сказали. Повторите")
             return ""
