@@ -2,14 +2,13 @@ import speech_recognition as sr
 import pyttsx3
 
 
-class AudioProcessor():
+class AudioProcessor:
     
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.engine = pyttsx3.init()
 
     def audio_to_text(self, audio):
-        # функция перевода текстa в аудио
 
         try:
             text = self.recognizer.recognize_google(audio, language="ru-Ru")

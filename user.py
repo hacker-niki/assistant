@@ -7,4 +7,5 @@ class User:
         self.secondLanguage = second_language
         self.town = town
 
+
 client = User("m", "User", "ru", "en", "Минск")
