@@ -17,10 +17,11 @@ class Assistant:
 
     def run(self):
         access_key = ''  # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-        keyword_paths = ['data/model']
+        keyword_paths = ['data\\model']
+
         handle = pvporcupine.create(access_key="r10k7RyJ6Dc5R9PE0PuA0saOtZmbF70H6ej5JH/nwSiTzQkx9BCAZg==",
                                     keyword_paths=keyword_paths, sensitivities=[1])
-        recorder = PvRecorder(device_index=1, frame_length=512)
+        recorder = PvRecorder(device_index=0, frame_length=512)
 
         while True:
             recorder.start()
