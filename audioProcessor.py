@@ -16,7 +16,13 @@ class AudioProcessor():
         self.recognizer = sr.Recognizer()
         self.engine = pyttsx3.init()
 
-    def use_offline_recognition(self, language):
+
+    def use_offline_recognition(self, audio, language):
+
+        # запишем аудио в файл для перевода в текст через vosk
+        with open("microphone-results.wav", "wb") as file:
+            file.write(audio.get_wav_data())
+
         recognized_data = ""
         try:
             # проверка наличия модели на нужном языке в каталоге приложения
@@ -33,6 +39,7 @@ class AudioProcessor():
                 print("Please download the model from:\n"
                       "https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.")
                 exit(1)
+
 
             # анализ записанного в микрофон аудио (чтобы избежать повторов фразы)
             wave_audio_file = wave.open("microphone-results.wav", "rb")
@@ -79,7 +86,7 @@ class AudioProcessor():
         except sr.RequestError:
             print("распознавание через Vosk:")
             try:
-                text = self.use_offline_recognition(language)
+                text = self.use_offline_recognition(audio, language)
                 # print(text)
                 return str(text)
             except sr.UnknownValueError:
