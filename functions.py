@@ -10,6 +10,12 @@ import speech_recognition as sr
 import user
 from user import client
 from audioProcessor import AudioProcessor
+import time
+import math
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import pybrightness
 # import pywinauto
 
 
