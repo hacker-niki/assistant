@@ -10,14 +10,13 @@ import user
 import assistant
 
 
-class AudioProcessor():
+class AudioProcessor:
     
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.engine = pyttsx3.init()
-
-
-    def use_offline_recognition(self, audio, language):
+        
+    def use_offline_recognition(self, audio, language="russian"):
 
         # запишем аудио в файл для перевода в текст через vosk
         with open("microphone-results.wav", "wb") as file:
@@ -79,6 +78,9 @@ class AudioProcessor():
         # запишем аудио в файл для перевода в текст через vosk
         with open("microphone-results.wav", "wb") as file:
             file.write(audio.get_wav_data())
+
+    def audio_to_text(self, audio):
+
 
         try:
             text = self.recognizer.recognize_google(audio, language="ru-Ru")

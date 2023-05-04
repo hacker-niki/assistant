@@ -6,13 +6,12 @@ from googletrans import Translator, constants
 import pyautogui as pg
 import keyboard
 import webbrowser
-from playsound import playsound
 import speech_recognition as sr
-import pyttsx3
-from user import User
+import user
 from user import client
 from audioProcessor import AudioProcessor
-import pyautogui
+# import pywinauto
+
 
 def extract_city_function(command: str):
     pattern = r"погода в ([\w\s]+)"
@@ -36,8 +35,8 @@ def weather_function(a):
         humidity = data["main"]["humidity"]
         wind_speed = data["wind"]["speed"]
         return translator.translate(text=
-            f"In {user.client.town} {weather}, temperature {int(temperature)} degrees celsius, humidity {int(humidity)} percents, and wind speed {int(wind_speed)} meters per second.",
-            dest="ru").text
+                                    f"In {user.client.town} {weather}, temperature {int(temperature)} degrees celsius, humidity {int(humidity)} percents, and wind speed {int(wind_speed)} meters per second.",
+                                    dest="ru").text
     else:
         return "Извините, я не смог получить информацию о погоде в этом городе."
 
@@ -62,8 +61,9 @@ def stop_function(a) -> str:
 def default_function(a) -> str:
     return "Не удалось распознать команду."
 
-def spotify_function(a)->str:
-    #открывает и ищет в Spotify через браузер
+
+def spotify_function(a) -> str:
+    # открывает и ищет в Spotify через браузер
     sentence: str = ""
     for i in a:
         sentence += i
@@ -72,9 +72,10 @@ def spotify_function(a)->str:
     webbrowser.get().open(url)
     time.sleep(2)
 
-def launch_desktop_spotify(a)->str:
-    #запуск десктопного приложения Spotify и запуск существующей песни
-    sentence:str = ""
+
+def launch_desktop_spotify(a) -> str:
+    # запуск десктопного приложения Spotify и запуск существующей песни
+    sentence: str = ""
     for i in a:
         sentence += i
     print(sentence)
@@ -104,17 +105,18 @@ def commands_function(a) -> str:
 
 
 def search_function(a) -> str:  # type: ignore
-    sentence:str = ""
+    sentence: str = ""
     for i in a:
         sentence += i + ' '
     try:
-        webbrowser.open_new_tab("https://www.google.com/search?q="+sentence)
+        webbrowser.open_new_tab("https://www.google.com/search?q=" + sentence)
         return "Открываю браузер"
     except:
         return "Не удалось открыть браузер"
-    
-def youtube_function(a)->str:
-    sentence:str = ""
+
+
+def youtube_function(a) -> str:
+    sentence: str = ""
     for i in a:
         sentence += ' ' + i
     print(sentence)
@@ -125,10 +127,12 @@ def youtube_function(a)->str:
     except:
         return "Не удалось открыть"
 
-def settings_function(a)->str:
+
+def settings_function(a) -> str:
     settings = AudioProcessor()
 
-    settings.answer_text_to_audio("Выберете что вы хотите поменять: имя, пол, основной язык, дополнительный язык, город")
+    settings.answer_text_to_audio(
+        "Выберете что вы хотите поменять: имя, пол, основной язык, дополнительный язык, город")
     audio = recognize_speech()
     parametr = settings.audio_to_text(audio)
 
@@ -160,6 +164,7 @@ def settings_function(a)->str:
 
     settings.answer_text_to_audio("Изменения были успешно введены")
 
+
 def recognize_speech():
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -168,17 +173,18 @@ def recognize_speech():
         return audio
 
 
-def repeat_function(a)->str:
+def repeat_function(a) -> str:
     sentence = ' '.join(a)
     repeat = AudioProcessor()
     repeat.answer_text_to_audio(sentence)
 
-def app_function(a)->str:
-    sentence = ' '.join(a)
-    settings = AudioProcessor()
-    settings.answer_text_to_audio("Скажите название приложения")
-    audio = recognize_speech()
-    text = settings.audio_to_text(audio)
-    pyautogui.press("win")
-    pyautogui.typewrite(text)
-    pyautogui.press("enter")
+
+# def app_function(a) -> str:
+#     sentence = ' '.join(a)
+#     settings = AudioProcessor()
+#     settings.answer_text_to_audio("Скажите название приложения")
+#     audio = recognize_speech()
+#     text = settings.audio_to_text(audio)
+#     pyautogui.press("win")
+#     pyautogui.typewrite(text)
+#     pyautogui.press("enter")

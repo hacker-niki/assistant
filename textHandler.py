@@ -1,5 +1,6 @@
 import functions
 import json
+from fuzzywuzzy import fuzz, process
 
 
 class TextHandler:
@@ -8,20 +9,32 @@ class TextHandler:
             self.function_map = json.load(f, object_hook=dict)
             f.close()
 
-    # Возвращает текст, который возвращают вызываемые функции и true если нужно продолжить работу
-    # False если завершить
+    def get_best_match(self, word):
+        best_score = 0
+        best_match = None
+        for key, words_list in self.function_map.items():
+            for w in words_list:
+                score = fuzz.ratio(word.lower(), w.lower())
+                if score > best_score:
+                    best_score = score
+                    best_match = key
+        return best_match
+
     def map_string_to_function(self, input_string: str) -> list:
         words = input_string.split()
         if len(words) == 0:
             function_to_call = getattr(functions, 'default_function')
         else:
-            first_word = words[0].lower()
-            for variants in self.function_map.items():
-                if first_word in variants[1]:
+            for word in words:
+                best_match = self.get_best_match(word)
+                if best_match:
                     function_to_call = getattr(
-                        functions, variants[0] + '_function')
-                    if variants[0] == "stop":
-                        return [False, function_to_call(words[1:])]
-                    return [True, function_to_call(words[1:])]
+                        functions, best_match + '_function')
+                    remaining_words = words.copy()
+                    remaining_words.remove(word)
+                    remaining_string = ' '.join(remaining_words)
+                    if best_match == "stop":
+                        return [False, function_to_call(remaining_string)]
+                    return [True, function_to_call(remaining_string)]
             function_to_call = getattr(functions, 'default_function')
-        return [True, function_to_call(words[1:])]
+        return [True, function_to_call(words)]

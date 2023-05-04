@@ -1,5 +1,6 @@
 from assistant import Assistant
 import user
 
-assistant = Assistant()
-assistant.run()
+if __name__ == '__main__':
+    assistant = Assistant()
+    assistant.run()
