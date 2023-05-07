@@ -22,6 +22,7 @@ class TextHandler:
 
     def map_string_to_function(self, input_string: str) -> list:
         words = input_string.split()
+        print(words)
         if len(words) == 0:
             function_to_call = getattr(functions, 'default_function')
         else:
@@ -33,6 +34,7 @@ class TextHandler:
                     remaining_words = words.copy()
                     remaining_words.remove(word)
                     remaining_string = ' '.join(remaining_words)
+                    # print(remaining_string)
                     if best_match == "stop":
                         return [False, function_to_call(remaining_string)]
                     return [True, function_to_call(remaining_string)]

@@ -1,3 +1,4 @@
+import speech_recognition
 import speech_recognition as sr
 import pyttsx3
 import vosk
@@ -8,87 +9,93 @@ import traceback
 import user
 
 import assistant
+from pvrecorder import PvRecorder
 
 
 class AudioProcessor:
-    
+
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.engine = pyttsx3.init()
-        
-    def use_offline_recognition(self, audio, language="russian"):
-
-        # запишем аудио в файл для перевода в текст через vosk
-        with open("microphone-results.wav", "wb") as file:
-            file.write(audio.get_wav_data())
-
-        recognized_data = ""
         try:
             # проверка наличия модели на нужном языке в каталоге приложения
+            if not os.path.exists("data\\vosk-model-small-ru-0.22"):
+                print(("Please download the model from:\n"
+                       "https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.",
+                       "red"))
 
-            # Необходимо ввести путь к местоположению модуля распознавания воск!!!!!!1
-            model_path = ""
+                # анализ записанного в микрофон аудио (чтобы избежать повторов фразы)
+            self.model = vosk.Model("data\\vosk-model-small-ru-0.22")
 
-            if (language == "russian"):
-                model_path = "models/vosk-model-small-ru-0.22"  # путь к файлу модели
-            elif (language == "english"):
-                model_path = "models/vosk-model-en-us-0.22-lgraph"  # путь к файлу модели
-
-            if not os.path.exists(model_path):
-                print("Please download the model from:\n"
-                      "https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.")
-                exit(1)
-
-
-            # анализ записанного в микрофон аудио (чтобы избежать повторов фразы)
-            wave_audio_file = wave.open("microphone-results.wav", "rb")
-            model = vosk.Model(model_path)
-            rec = vosk.KaldiRecognizer(model, wave_audio_file.getframerate())
-
-            data = wave_audio_file.readframes(wave_audio_file.getnframes())
-
-            last_n = True
-
-            while last_n:
-                last_n = False
-                if len(data) > 0:
-                    if rec.AcceptWaveform(data):
-                        # получение данных распознанного текста из JSON-строки (чтобы можно было выдать по ней ответ)
-                        res = json.loads(rec.Result())
-
-                        if res['text'] != '':
-                            recognized_data += f" {res['text']}"
-                            last_n = False
-                        elif not last_n:
-                            recognized_data += '\n'
-                            last_n = True
-
-            res = json.loads(rec.FinalResult())
-            recognized_data += f" {res['text']}"
-
+            self.microphone = speech_recognition.Microphone()
         except:
             traceback.print_exc()
-            print("Sorry, speech service is unavailable. Try again later")
+            print(("Sorry, speech service is unavailable. Try again later", "red"))
+            exit(1)
+
+    def record_and_recognize_audio(self):
+        with self.microphone:
+            recognized_data = ""
+            # регулирование уровня окружающего шума
+            self.recognizer.adjust_for_ambient_noise(self.microphone, duration=0.2)
+
+            try:
+                print("Listening...")
+                audio = self.recognizer.listen(self.microphone, 5, 5)
+
+                with open("microphone-results.wav", "wb") as file:
+                    file.write(audio.get_wav_data())
+
+            except speech_recognition.WaitTimeoutError:
+                print("Can you check if your microphone is on, please?")
+                return
+
+            # использование online-распознавания через Google
+            # (высокое качество распознавания)
+            try:
+                print("Started recognition...")
+                # print("Trying to use offline recognition...")
+                recognized_data = self.use_offline_recognition()
+            except:
+                print("Unable to recognize")
+                exit(1)
+        print(recognized_data)
+        return recognized_data
+
+    def use_offline_recognition(self):
+
+        recognized_data = ""
+
+        wave_audio_file = wave.open("microphone-results.wav", "rb")
+
+        offline_recognizer = vosk.KaldiRecognizer(self.model, wave_audio_file.getframerate())
+
+        data = wave_audio_file.readframes(wave_audio_file.getnframes())
+        if len(data) > 0:
+            if offline_recognizer.AcceptWaveform(data):
+                recognized_data = offline_recognizer.Result()
+
+                # получение данных распознанного текста из JSON-строки (чтобы можно было выдать по ней ответ)
+                recognized_data = json.loads(recognized_data)
+                recognized_data = recognized_data["text"]
 
         return recognized_data
 
-    def audio_to_text(self, audio, language):
-        # функция перевода аудио в текст
-
-        # запишем аудио в файл для перевода в текст через vosk
-        with open("microphone-results.wav", "wb") as file:
-            file.write(audio.get_wav_data())
+    # def audio_to_text(self, audio, language):
+    #     # функция перевода аудио в текст
+    #
+    #     # запишем аудио в файл для перевода в текст через vosk
+    #     with open("microphone-results.wav", "wb") as file:
+    #         file.write(audio.get_wav_data())
 
     def audio_to_text(self, audio):
-
-
         try:
             text = self.recognizer.recognize_google(audio, language="ru-Ru")
             return str(text)
         except sr.RequestError:
             print("распознавание через Vosk:")
             try:
-                text = self.use_offline_recognition(audio, language)
+                text = self.use_offline_recognition()
                 # print(text)
                 return str(text)
             except sr.UnknownValueError:
@@ -102,4 +109,3 @@ class AudioProcessor:
         # функция воспроизведения текста
         self.engine.say(text)
         self.engine.runAndWait()
-

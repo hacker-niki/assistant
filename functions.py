@@ -16,6 +16,8 @@ from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import pybrightness
+
+
 # import pywinauto
 
 
@@ -70,13 +72,10 @@ def default_function(a) -> str:
 
 def spotify_function(a) -> str:
     # открывает и ищет в Spotify через браузер
-    sentence: str = ""
-    for i in a:
-        sentence += i
-    print(sentence)
-    url = "https://open.spotify.com/search/" + sentence
+    url = "https://open.spotify.com/search/" + a
     webbrowser.get().open(url)
-    time.sleep(2)
+
+    return "Открываю спотифай"
 
 
 def launch_desktop_spotify(a) -> str:
@@ -111,27 +110,21 @@ def commands_function(a) -> str:
 
 
 def search_function(a) -> str:  # type: ignore
-    sentence: str = ""
-    for i in a:
-        sentence += i + ' '
     try:
-        webbrowser.open_new_tab("https://www.google.com/search?q=" + sentence)
+        webbrowser.open_new_tab("https://www.google.com/search?q=" + a)
         return "Открываю браузер"
     except:
         return "Не удалось открыть браузер"
 
 
 def youtube_function(a) -> str:
-    sentence: str = ""
-    for i in a:
-        sentence += ' ' + i
-    print(sentence)
-    url = "https://www.youtube.com/results?search_query=" + sentence
+    # print(sentence)
+    url = "https://www.youtube.com/results?search_query=" + a
     try:
         webbrowser.get().open(url)
         return "Открываю ютуб"
     except:
-        return "Не удалось открыть"
+        return "Не удалось открыть ютуб"
 
 
 def settings_function(a) -> str:
@@ -183,11 +176,10 @@ def repeat_function(a) -> str:
     sentence = ' '.join(a)
     repeat = AudioProcessor()
     repeat.answer_text_to_audio(sentence)
-    
-    
-#функция работает по типу звук/громкость уменьшить/увеличить и функция увел/умен на 10%    
-def sound_function(a) -> str:
 
+
+# функция работает по типу звук/громкость уменьшить/увеличить и функция увел/умен на 10%
+def sound_function(a) -> str:
     devices = AudioUtilities.GetSpeakers()
     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
     volume = cast(interface, POINTER(IAudioEndpointVolume))
@@ -201,8 +193,9 @@ def sound_function(a) -> str:
         new_volume = current_volume + 0.1
         volume.SetMasterVolumeLevelScalar(new_volume, None)
 
-#функция работает по типу яркость + число на которое надо установить текущюу яркость в процентах        
-def brightness_function(a) ->str:
+
+# функция работает по типу яркость + число на которое надо установить текущюу яркость в процентах
+def brightness_function(a) -> str:
     sentence = ' '.join(a)
     number = int(re.findall(r'\d+', sentence)[0] + re.findall(r'\d+', sentence)[1])
     pybrightness.custom(number)

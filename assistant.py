@@ -1,8 +1,12 @@
-import speech_recognition as sr
+from time import sleep
+
 import textHandler
 import audioProcessor
 import pvporcupine
 from pvrecorder import PvRecorder
+from vosk import Model, KaldiRecognizer
+import os
+import pyaudio
 
 
 class Assistant:
@@ -11,14 +15,22 @@ class Assistant:
         self.handler = textHandler.TextHandler()
         self.audio = audioProcessor.AudioProcessor()
         self.audio.answer_text_to_audio("Здарова, Меченый!")
-        self.handler = textHandler.TextHandler()
+        self.model = Model(model_path="data\\vosk-model-small-ru-0.22")  # полный путь к модели
+        self.rec = KaldiRecognizer(self.model, 44100)
+        p = pyaudio.PyAudio()
+        self.stream = p.open(
+            format=pyaudio.paInt16,
+            channels=1,
+            rate=44100,
+            input=True,
+            frames_per_buffer=44100
+        )
 
     def run(self):
-        access_key = 'r10k7RyJ6Dc5R9PE0PuA0saOtZmbF70H6ej5JH/nwSiTzQkx9BCAZg==' #надо сделать интерфейс вставки своего ключа
+        access_key = 'r10k7RyJ6Dc5R9PE0PuA0saOtZmbF70H6ej5JH/nwSiTzQkx9BCAZg=='  # надо сделать интерфейс вставки своего ключа
         keyword_paths = ['data\\model_hey_quant.ppn']
 
-        handle = pvporcupine.create(access_key=access_key,
-                                    keyword_paths=keyword_paths, sensitivities=[1])
+        handle = pvporcupine.create(access_key=access_key, keyword_paths=keyword_paths, sensitivities=[1])
         recorder = PvRecorder(device_index=-1, frame_length=512)
 
         while True:
@@ -37,13 +49,10 @@ class Assistant:
                     break
 
     # Функция для распознавания речи
-
     def recognize_speech(self):
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            self.audio.answer_text_to_audio("Да, господин, слушаю команду")
-            audio = r.listen(source, phrase_time_limit=5)
-            return self.audio.audio_to_text(audio=audio)
+        # os.remove("microphone-results.wav")
+        self.audio.answer_text_to_audio("Да, господин")
+        return self.audio.record_and_recognize_audio()
 
     # Функция для выполнения команд
     def process_command(self, command) -> bool:
