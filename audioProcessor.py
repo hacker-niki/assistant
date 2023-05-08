@@ -15,9 +15,9 @@ from pvrecorder import PvRecorder
 class AudioProcessor:
 
     def __init__(self):
-        self.recognizer = sr.Recognizer()
-        self.engine = pyttsx3.init()
         try:
+            self.recognizer = sr.Recognizer()
+            self.engine = pyttsx3.init()
             # проверка наличия модели на нужном языке в каталоге приложения
             if not os.path.exists("data\\vosk-model-small-ru-0.22"):
                 print(("Please download the model from:\n"
@@ -28,6 +28,9 @@ class AudioProcessor:
             self.model = vosk.Model("data\\vosk-model-small-ru-0.22")
 
             self.microphone = speech_recognition.Microphone()
+            with self.microphone:
+                self.recognizer.adjust_for_ambient_noise(self.microphone, duration=1)
+
         except:
             traceback.print_exc()
             print(("Sorry, speech service is unavailable. Try again later", "red"))
@@ -37,18 +40,15 @@ class AudioProcessor:
         with self.microphone:
             recognized_data = ""
             # регулирование уровня окружающего шума
-            self.recognizer.adjust_for_ambient_noise(self.microphone, duration=0.2)
-
             try:
                 print("Listening...")
-                audio = self.recognizer.listen(self.microphone, 5, 5)
+                audio = self.recognizer.listen(self.microphone, 5, 6)
 
                 with open("microphone-results.wav", "wb") as file:
                     file.write(audio.get_wav_data())
 
             except speech_recognition.WaitTimeoutError:
-                print("Can you check if your microphone is on, please?")
-                return
+                return ("Я ничего не услышал")
 
             # использование online-распознавания через Google
             # (высокое качество распознавания)

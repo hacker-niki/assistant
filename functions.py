@@ -106,7 +106,7 @@ def joke_function(a) -> str:
 
 
 def commands_function(a) -> str:
-    return "Пока что я могу: найти информацию в интернете, рассказать анектод, сказать сколько сейчас времени, поприветсвовать вас, попрощаться с кожанным, также вы можете поинтересоваться как у меня дела"
+    return "Пока что я могу: найти информацию в интернете, рассказать анекдот, сказать сколько сейчас времени, поприветсвовать вас, попрощаться с кожанным, также вы можете поинтересоваться как у меня дела"
 
 
 def search_function(a) -> str:  # type: ignore
@@ -125,6 +125,15 @@ def youtube_function(a) -> str:
         return "Открываю ютуб"
     except:
         return "Не удалось открыть ютуб"
+
+
+def wikipedia_function(query) -> str:
+    url = "https://ru.wikipedia.org/wiki/Special:Search?search=" + query
+    try:
+        webbrowser.get().open(url)
+        return "Открываю Википедию"
+    except:
+        return "Не удалось открыть Википедию"
 
 
 def settings_function(a) -> str:
@@ -161,7 +170,7 @@ def settings_function(a) -> str:
         town = settings.audio_to_text(audio)
         client.town = town
 
-    settings.answer_text_to_audio("Изменения были успешно введены")
+    return "Изменения были успешно введены"
 
 
 def recognize_speech():

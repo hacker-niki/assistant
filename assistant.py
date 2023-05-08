@@ -30,7 +30,7 @@ class Assistant:
         access_key = 'r10k7RyJ6Dc5R9PE0PuA0saOtZmbF70H6ej5JH/nwSiTzQkx9BCAZg=='  # надо сделать интерфейс вставки своего ключа
         keyword_paths = ['data\\model_hey_quant.ppn']
 
-        handle = pvporcupine.create(access_key=access_key, keyword_paths=keyword_paths, sensitivities=[1])
+        handle = pvporcupine.create(access_key=access_key, keyword_paths=keyword_paths, sensitivities=[0.7])
         recorder = PvRecorder(device_index=-1, frame_length=512)
 
         while True:
