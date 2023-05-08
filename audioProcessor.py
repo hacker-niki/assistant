@@ -26,7 +26,7 @@ class AudioProcessor:
 
                 # анализ записанного в микрофон аудио (чтобы избежать повторов фразы)
             self.model = vosk.Model("data\\vosk-model-small-ru-0.22")
-
+            print(speech_recognition.Microphone.list_working_microphones())
             self.microphone = speech_recognition.Microphone()
             with self.microphone:
                 self.recognizer.adjust_for_ambient_noise(self.microphone, duration=1)

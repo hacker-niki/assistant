@@ -7,7 +7,6 @@ class TextHandler:
     def __init__(self, commands_file='commands.json'):
         with open(commands_file, 'r', encoding="utf-8") as f:
             self.function_map = json.load(f, object_hook=dict)
-            # print(self.function_map)
             f.close()
 
     def get_best_match(self, word):
@@ -29,7 +28,7 @@ class TextHandler:
             for word in words:
                 best_match = self.get_best_match(word)
                 if best_match:
-                    function_to_call = getattr(self, best_match + '_function')
+                    function_to_call = getattr(functions, best_match + '_function')
                     remaining_words = words.copy()
                     remaining_words.remove(word)
                     remaining_string = ' '.join(remaining_words)
