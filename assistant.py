@@ -43,8 +43,8 @@ class Assistant:
                     command = self.recognize_speech()
                     answer = self.handler.map_string_to_function(command)
                     if not answer[0]:
-                        self.audio.answer_text_to_audio("Не удалось распознать команду")
-                        break
+                        self.audio.answer_text_to_audio("Завершаю работу")
+                        exit(0)
                     self.audio.answer_text_to_audio(answer[1])
                     break
 

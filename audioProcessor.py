@@ -18,13 +18,11 @@ class AudioProcessor:
         try:
             self.recognizer = sr.Recognizer()
             self.engine = pyttsx3.init()
-            # проверка наличия модели на нужном языке в каталоге приложения
-            if not os.path.exists("data\\vosk-model-small-ru-0.22"):
-                print(("Please download the model from:\n"
-                       "https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.",
-                       "red"))
+            # if not os.path.exists("data\\vosk-model-ru-0.42"):
+            #     print(("Please download the model from:\n"
+            #            "https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.",
+            #            "red"))
 
-                # анализ записанного в микрофон аудио (чтобы избежать повторов фразы)
             self.model = vosk.Model("data\\vosk-model-small-ru-0.22")
             print(speech_recognition.Microphone.list_working_microphones())
             self.microphone = speech_recognition.Microphone()
@@ -39,7 +37,6 @@ class AudioProcessor:
     def record_and_recognize_audio(self):
         with self.microphone:
             recognized_data = ""
-            # регулирование уровня окружающего шума
             try:
                 print("Listening...")
                 audio = self.recognizer.listen(self.microphone, 5, 6)
@@ -50,8 +47,6 @@ class AudioProcessor:
             except speech_recognition.WaitTimeoutError:
                 return ("Я ничего не услышал")
 
-            # использование online-распознавания через Google
-            # (высокое качество распознавания)
             try:
                 print("Started recognition...")
                 # print("Trying to use offline recognition...")
@@ -63,11 +58,8 @@ class AudioProcessor:
         return recognized_data
 
     def use_offline_recognition(self):
-
         recognized_data = ""
-
         wave_audio_file = wave.open("microphone-results.wav", "rb")
-
         offline_recognizer = vosk.KaldiRecognizer(self.model, wave_audio_file.getframerate())
 
         data = wave_audio_file.readframes(wave_audio_file.getnframes())
@@ -75,10 +67,12 @@ class AudioProcessor:
             if offline_recognizer.AcceptWaveform(data):
                 recognized_data = offline_recognizer.Result()
 
-                # получение данных распознанного текста из JSON-строки (чтобы можно было выдать по ней ответ)
+                # получение данных распознанного текста из JSON-строки
+                # (чтобы можно было выдать по ней ответ)
                 recognized_data = json.loads(recognized_data)
                 recognized_data = recognized_data["text"]
-
+            print(recognized_data)
+        # Return recognized dat a
         return recognized_data
 
     # def audio_to_text(self, audio, language):
