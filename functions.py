@@ -10,14 +10,19 @@ import user
 from user import client
 from audioProcessor import AudioProcessor
 import time
-# import math
-# from ctypes import cast, POINTER
-# from comtypes import CLSCTX_ALL
-# from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import math
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import pybrightness
+import subprocess
+import platform
+import wikipedia
+import openai
+import os
+import pywinauto
+import random
 
-
-# import pywinauto
 
 
 def extract_city_function(command: str):
@@ -70,8 +75,9 @@ def default_function(a) -> str:
 
 
 def spotify_function(a) -> str:
+    sentence = ''.join(a)
     # открывает и ищет в Spotify через браузер
-    url = "https://open.spotify.com/search/" + a
+    url = "https://open.spotify.com/search/" + sentence
     webbrowser.get().open(url)
     return "Открываю спотифай"
 
@@ -98,18 +104,25 @@ def launch_desktop_spotify(a) -> str:
 def mood_function(a) -> str:
     return "Какие дела могут быть у робота? Не крашнулся и то хорошо"
 
-
 def joke_function(a) -> str:
-    return "Колобок повесился, ахаххаха"
-
+    random_number = random.randint(0, 3)
+    if random_number == 0:
+        return "Если вы внезапно оказались в яме, первое, что нужно сделать - перестать копать!"
+    elif random_number == 1:
+        return "Штирлиц уходил от ответа, ответ неотступно следовал за ним."
+    elif random_number == 2:
+        return "Уходя из квартиры, делай селфи с утюгом! Так ты избежишь ненужных сомнений."
+    elif random_number == 3:
+        return "Колобок повесился, ахаххаха"
 
 def commands_function(a) -> str:
-    return "Пока что я могу: найти информацию в интернете, рассказать анекдот, сказать сколько сейчас времени, поприветсвовать вас, попрощаться с кожанным, также вы можете поинтересоваться как у меня дела"
+    return "Пока что я могу: повторить за вами, настроить яркость и звук, выключить компьютер, изменить расскладку клавиатуры, подбросить монетку, рассказать или написать что-нибудь, найти информацию в интернете, рассказать прогноз погоды, найти видео в ютубе, рассказать анекдот, сказать сколько сейчас времени, найти определение в википедии, настроить данные о пользователе,  поприветсвовать вас, попрощаться с вами, найти песню в спотифай, также вы можете поинтересоваться как у меня дела"
 
 
 def search_function(a) -> str:  # type: ignore
+    sentence = ''.join(a)
     try:
-        webbrowser.open_new_tab("https://www.google.com/search?q=" + a)
+        webbrowser.open_new_tab("https://www.google.com/search?q=" + sentence)
         return "Открываю браузер"
     except:
         return "Не удалось открыть браузер"
@@ -117,7 +130,8 @@ def search_function(a) -> str:  # type: ignore
 
 def youtube_function(a) -> str:
     # print(sentence)
-    url = "https://www.youtube.com/results?search_query=" + a
+    sentence = ''.join(a)
+    url = "https://www.youtube.com/results?search_query=" + sentence
     try:
         webbrowser.get().open(url)
         return "Открываю ютуб"
@@ -180,25 +194,11 @@ def recognize_speech():
 
 
 def repeat_function(a) -> str:
-    sentence = ' '.join(a)
+    sentence = ''.join(a)
     repeat = AudioProcessor()
     repeat.answer_text_to_audio(sentence)
+    return ""
 
-
-# функция работает по типу звук/громкость уменьшить/увеличить и функция увел/умен на 10%
-# def sound_function(a) -> str:
-#     devices = AudioUtilities.GetSpeakers()
-#     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-#     volume = cast(interface, POINTER(IAudioEndpointVolume))
-#
-#     if a == "уменьшить" or a == "меньше" or a == "ниже":
-#         current_volume = volume.GetMasterVolumeLevelScalar()
-#         new_volume = current_volume - 0.1
-#         volume.SetMasterVolumeLevelScalar(new_volume, None)
-#     elif a == "увеличить" or a == "больше" or a == "выше":
-#         current_volume = volume.GetMasterVolumeLevelScalar()
-#         new_volume = current_volume + 0.1
-#         volume.SetMasterVolumeLevelScalar(new_volume, None)
 
 
 # функция работает по типу яркость + число на которое надо установить текущюу яркость в процентах
@@ -206,7 +206,89 @@ def brightness_function(a) -> str:
     sentence = ' '.join(a)
     number = int(re.findall(r'\d+', sentence)[0] + re.findall(r'\d+', sentence)[1])
     pybrightness.custom(number)
+    return ""
+    
+# оч опасная функция честно первый раз было оч страшно запускать
+def off_function (a) -> str:
+    subprocess.call('shutdown /s /t 2', shell=True)
+    return ""
 
+
+def key_board_function(a) -> str:
+    keyboard.press_and_release('left alt + shift')
+    return ""
+
+
+def write_function_function(a) -> str:
+    sentence = "напиши " + ''.join(a)
+
+    print(sentence)
+    openai.api_key = "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"
+    model_engine = "text-davinci-002"
+    openai.api_base = "https://api.openai.com/v1/"
+
+    completions = openai.Completion.create(
+        engine=model_engine,
+        prompt=sentence,
+        max_tokens=3000,
+        n = 1,
+        stop=None,
+        temperature=0.5,
+    )
+
+    message = completions.choices[0].text
+    generated_text = message.strip()
+    try:
+        answer = "Запрос: " + sentence + ' ' + generated_text
+        with open('function.txt', 'w') as f:
+            f.write(answer)
+        os.system("function.txt")
+        return "Задание выполнено"
+
+    except:
+        return "Задание не выполнено"
+
+
+def say_function(a) -> str:
+    sentence = "расскажи " + ''.join(a)
+    print(sentence)
+    openai.api_key = "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"
+    model_engine = "text-davinci-002"
+    openai.api_base = "https://api.openai.com/v1/"
+
+    completions = openai.Completion.create(
+        engine=model_engine,
+        prompt=sentence,
+        max_tokens=2000,
+        n = 1,
+        stop=None,
+        temperature=0.5,
+    )
+
+    message = completions.choices[0].text
+    generated_text = message.strip()
+
+    return generated_text
+
+def coin_function(a) -> str:
+    random_number = random.randint(0, 1)
+    if random_number == 0:
+        return "Выпал орел"
+    else:
+        return "Выпала решка"
+    
+def sound_function(a) -> str:
+     devices = AudioUtilities.GetSpeakers()
+     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+     volume = cast(interface, POINTER(IAudioEndpointVolume))
+     current_volume = volume.GetMasterVolumeLevelScalar()
+     if current_volume == 0:
+        new_volume = 0.5
+     else:
+         new_volume = 0
+     volume.SetMasterVolumeLevelScalar(new_volume, None)
+     return ""
+    
 # def app_function(a) -> str:
 #     sentence = ' '.join(a)
 #     settings = AudioProcessor()
