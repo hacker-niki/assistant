@@ -1,8 +1,7 @@
 import datetime
 import re
 import requests
-import time
-from googletrans import Translator, constants
+from googletrans import Translator
 import pyautogui as pg
 import keyboard
 import webbrowser

@@ -1,13 +1,7 @@
-from time import sleep
-
 import textHandler
 import audioProcessor
 import pvporcupine
 from pvrecorder import PvRecorder
-from vosk import Model, KaldiRecognizer
-import os
-import pyaudio
-
 
 class Assistant:
     def __init__(self):
@@ -15,16 +9,6 @@ class Assistant:
         self.handler = textHandler.TextHandler()
         self.audio = audioProcessor.AudioProcessor()
         self.audio.answer_text_to_audio("Здарова, Меченый!")
-        self.model = Model(model_path="data\\vosk-model-small-ru-0.22")  # полный путь к модели
-        self.rec = KaldiRecognizer(self.model, 44100)
-        p = pyaudio.PyAudio()
-        self.stream = p.open(
-            format=pyaudio.paInt16,
-            channels=1,
-            rate=44100,
-            input=True,
-            frames_per_buffer=44100
-        )
 
     def run(self):
         access_key = 'r10k7RyJ6Dc5R9PE0PuA0saOtZmbF70H6ej5JH/nwSiTzQkx9BCAZg=='  # надо сделать интерфейс вставки своего ключа
