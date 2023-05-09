@@ -18,7 +18,10 @@ class TextHandler:
                 if score > best_score:
                     best_score = score
                     best_match = func_name
-        return best_match
+        if best_score > 75:
+            return best_match
+        else:
+            return 0
 
     def map_string_to_function(self, input_string: str) -> list:
         words = input_string.split()
