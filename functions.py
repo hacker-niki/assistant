@@ -10,10 +10,10 @@ import user
 from user import client
 from audioProcessor import AudioProcessor
 import time
-import math
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+# import math
+# from ctypes import cast, POINTER
+# from comtypes import CLSCTX_ALL
+# from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import pybrightness
 
 
@@ -73,7 +73,6 @@ def spotify_function(a) -> str:
     # открывает и ищет в Spotify через браузер
     url = "https://open.spotify.com/search/" + a
     webbrowser.get().open(url)
-
     return "Открываю спотифай"
 
 
@@ -187,19 +186,19 @@ def repeat_function(a) -> str:
 
 
 # функция работает по типу звук/громкость уменьшить/увеличить и функция увел/умен на 10%
-def sound_function(a) -> str:
-    devices = AudioUtilities.GetSpeakers()
-    interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-    volume = cast(interface, POINTER(IAudioEndpointVolume))
-
-    if a == "уменьшить" or a == "меньше" or a == "ниже":
-        current_volume = volume.GetMasterVolumeLevelScalar()
-        new_volume = current_volume - 0.1
-        volume.SetMasterVolumeLevelScalar(new_volume, None)
-    elif a == "увеличить" or a == "больше" or a == "выше":
-        current_volume = volume.GetMasterVolumeLevelScalar()
-        new_volume = current_volume + 0.1
-        volume.SetMasterVolumeLevelScalar(new_volume, None)
+# def sound_function(a) -> str:
+#     devices = AudioUtilities.GetSpeakers()
+#     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+#     volume = cast(interface, POINTER(IAudioEndpointVolume))
+#
+#     if a == "уменьшить" or a == "меньше" or a == "ниже":
+#         current_volume = volume.GetMasterVolumeLevelScalar()
+#         new_volume = current_volume - 0.1
+#         volume.SetMasterVolumeLevelScalar(new_volume, None)
+#     elif a == "увеличить" or a == "больше" or a == "выше":
+#         current_volume = volume.GetMasterVolumeLevelScalar()
+#         new_volume = current_volume + 0.1
+#         volume.SetMasterVolumeLevelScalar(new_volume, None)
 
 
 # функция работает по типу яркость + число на которое надо установить текущюу яркость в процентах

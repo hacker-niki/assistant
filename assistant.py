@@ -2,6 +2,7 @@ import textHandler
 import audioProcessor
 import pvporcupine
 from pvrecorder import PvRecorder
+from sys import exit
 
 class Assistant:
     def __init__(self):

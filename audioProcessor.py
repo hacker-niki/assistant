@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
 import traceback
+from sys import exit
 
 
 class AudioProcessor:
