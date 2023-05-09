@@ -126,7 +126,8 @@ def youtube_function(a) -> str:
 
 
 def wikipedia_function(query) -> str:
-    url = "https://ru.wikipedia.org/wiki/Special:Search?search=" + query
+    sentence = ''.join(query)
+    url = "https://ru.wikipedia.org/wiki/Special:Search?search=" + sentence
     try:
         webbrowser.get().open(url)
         return "Открываю Википедию"
