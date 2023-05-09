@@ -2,7 +2,11 @@ import speech_recognition as sr
 import pyttsx3
 import traceback
 from sys import exit
-
+import os
+import torch
+import torch.package
+from pydub import AudioSegment
+from pydub.playback import play
 
 class AudioProcessor:
 
@@ -10,7 +14,15 @@ class AudioProcessor:
         try:
             self.recognizer = sr.Recognizer()
             self.engine = pyttsx3.init()
+            device = torch.device('cpu')
+            torch.set_num_threads(4)
+            local_file = 'data\\model.pt'
 
+            if not os.path.isfile(local_file):
+                torch.hub.download_url_to_file('https://models.silero.ai/models/tts/ru/v3_1_ru.pt',
+                                               local_file)
+            self.model = torch.package.PackageImporter(local_file).load_pickle("tts_models", "model")
+            self.model.to(device)
             print(sr.Microphone.list_working_microphones())
             self.microphone = sr.Microphone()
             with self.microphone:
@@ -53,6 +65,14 @@ class AudioProcessor:
             return ""
 
     def answer_text_to_audio(self, text):
+        sample_rate = 24000
+        speaker = 'baya'
+
+        audio_paths = self.model.save_wav(text=text,
+                                          speaker=speaker,
+                                          sample_rate=sample_rate)
+        audio = AudioSegment.from_file(audio_paths, format="wav")
+        play(audio)
         # функция воспроизведения текста
-        self.engine.say(text)
-        self.engine.runAndWait()
+        # self.engine.say(text)
+        # self.engine.runAndWait()
