@@ -8,6 +8,7 @@ import torch.package
 from pydub import AudioSegment
 from pydub.playback import play
 
+
 class AudioProcessor:
 
     def __init__(self):
@@ -73,6 +74,3 @@ class AudioProcessor:
                                           sample_rate=sample_rate)
         audio = AudioSegment.from_file(audio_paths, format="wav")
         play(audio)
-        # функция воспроизведения текста
-        # self.engine.say(text)
-        # self.engine.runAndWait()

@@ -25,6 +25,8 @@ build_exe_options = {
         "pycaw",
         "pybrightness",
         "fuzzywuzzy",
+        "pydub",
+        "torch"
     ],
     "packages": ["os", "sys"],
     "include_files": [
@@ -33,9 +35,9 @@ build_exe_options = {
 }
 
 setup(
-    name="YourAppName",
-    version="0.1",
-    description="Your app description",
+    name="Quant",
+    version="0.5",
+    description="Voice assistant for programmers",
     options={"build_exe": build_exe_options},
     executables=[Executable("app.py", target_name="assistant")],
 )
