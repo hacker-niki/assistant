@@ -22,7 +22,7 @@ import openai
 import os
 import pywinauto
 import random
-
+import geocoder
 
 
 def extract_city_function(command: str):
@@ -290,6 +290,13 @@ def sound_function(a) -> str:
      volume.SetMasterVolumeLevelScalar(new_volume, None)
      return ""
     
+def where_function(a) -> str:
+    g = geocoder.ip('me')
+    lat = g.latlng[0]
+    lng = g.latlng[1]
+    str = f"Вы находитесь на координатах {lat} градусов широты и {lng} градусов долготы"
+    return str
+
 # def app_function(a) -> str:
 #     sentence = ' '.join(a)
 #     settings = AudioProcessor()
