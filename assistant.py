@@ -1,3 +1,5 @@
+import json
+
 import textHandler
 import audioProcessor
 import pvporcupine
@@ -12,7 +14,10 @@ class Assistant:
         self.audio.answer_text_to_audio("Здарова, Меченый!")
 
     def run(self):
-        access_key = 'r10k7RyJ6Dc5R9PE0PuA0saOtZmbF70H6ej5JH/nwSiTzQkx9BCAZg=='  # надо сделать интерфейс вставки своего ключа
+        with open('data.json', 'r') as file:
+            data = json.load(file)
+            key = data['key']
+        access_key = key  # надо сделать интерфейс вставки своего ключа
         keyword_paths = ['data\\model_hey_quant.ppn']
 
         handle = pvporcupine.create(access_key=access_key, keyword_paths=keyword_paths, sensitivities=[0.7])

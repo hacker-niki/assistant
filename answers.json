@@ -1,0 +1,71 @@
+{
+  "start": {
+    "ru": "",
+    "en": ""
+  },
+  "hello": {
+    "ru": "Хабар принес?",
+    "en": ""
+  },
+  "stop": {
+    "ru": "",
+    "en": ""
+  },
+  "weather": {
+    "ru": "",
+    "en": ""
+  },
+  "time": {
+    "ru": "",
+    "en": ""
+  },
+  "settings": {
+    "ru": "",
+    "en": ""
+
+  },
+  "mood": {
+    "ru": "",
+    "en": ""
+  },
+  "joke": {
+    "ru": "",
+    "en": ""
+  },
+  "commands": {
+    "ru": "",
+    "en": ""
+  },
+  "search": {
+    "ru": "",
+    "en": ""
+  },
+  "youtube": {
+    "ru": "",
+    "en": ""
+  },
+  "app": {
+    "ru": "",
+    "en": ""
+  },
+  "repeat": {
+    "ru": "",
+    "en": ""
+  },
+  "sound": {
+    "ru": "",
+    "en": ""
+  },
+  "brightness": {
+    "ru": "",
+    "en": ""
+  },
+  "spotify": {
+    "ru": "",
+    "en": ""
+  },
+  "wikipedia": {
+    "ru": "",
+    "en": ""
+  }
+}

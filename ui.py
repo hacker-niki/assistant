@@ -7,10 +7,8 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import QSize
 import json
 import sounddevice as sd
-from assistant import Assistant
-import app
-import user
-from user import client
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -31,10 +29,10 @@ class MainWindow(QMainWindow):
         self.pushButton = QPushButton(self)
         self.pushButton.setIcon(QIcon(self.pixmap_log_in))
         self.pushButton.setIconSize(QSize(100, 100))
-        #self.pushButton.setIconSize(self.pixmap_log_in.size())
+        # self.pushButton.setIconSize(self.pixmap_log_in.size())
         self.pushButton.move(20, 20)
         self.pushButton.clicked.connect(self.open_new_window)
-        #self.pushButton.setStyleSheet("background-color: #5a6885;")
+        # self.pushButton.setStyleSheet("background-color: #5a6885;")
 
         self.pixmap_start = QPixmap("uiData/start.png")
 
@@ -86,13 +84,10 @@ class MainWindow(QMainWindow):
             with open("data.json", "r") as f:
                 data = json.load(f)
                 key = data['key']
-                #client.town = data['town']
                 town = data['town']
                 language = data['language']
-                if (key=='') | (town =='') | (language ==''):
+                if (key == '') | (town == '') | (language == ''):
                     self.open_new_window()
-                assistant = Assistant()
-                assistant.run()
                 print(data)
         else:
             self.open_new_window()
@@ -110,9 +105,9 @@ class NewWindow(QMainWindow):
         self.label1 = QLabel(self)
         self.label1.setPixmap(self.pixmap1_resized)
         self.label1.setFixedSize(self.pixmap1_resized.size())
-        #self.label1 = QLabel('Key porcupine:', self)
+        # self.label1 = QLabel('Key porcupine:', self)
         self.label1.move(20, 25)
-        #self.label1.setStyleSheet("color: white;")
+        # self.label1.setStyleSheet("color: white;")
         self.line1 = QLineEdit(self)
         self.line1.setFixedWidth(150)
         self.line1.move(20, 50)
@@ -123,7 +118,7 @@ class NewWindow(QMainWindow):
         self.label2.setPixmap(self.pixmap2_resized)
         self.label2.setFixedSize(self.pixmap2_resized.size())
         self.label2.move(20, 90)
-        #self.label2.setStyleSheet("color: white;")
+        # self.label2.setStyleSheet("color: white;")
         self.line2 = QLineEdit(self)
         self.line2.setFixedWidth(150)
         self.line2.move(20, 110)
@@ -134,7 +129,7 @@ class NewWindow(QMainWindow):
         self.label3.setPixmap(self.pixmap3_resized)
         self.label3.setFixedSize(self.pixmap3_resized.size())
         self.label3.move(20, 150)
-        #self.label3.setStyleSheet("color: white;")
+        # self.label3.setStyleSheet("color: white;")
         self.line3 = QLineEdit(self)
         self.line3.setFixedWidth(150)
         self.line3.move(20, 170)
@@ -166,7 +161,7 @@ class NewWindow(QMainWindow):
         self.pushButton3 = QPushButton(self)
         self.pushButton3.setIcon(QIcon(self.pixmap_start))
         self.pushButton3.setIconSize(QSize(100, 100))
-        #self.button2.setGeometry(180, 260, 100, 20)
+        # self.button2.setGeometry(180, 260, 100, 20)
         self.pushButton3.move(180, 280)
         self.pushButton3.clicked.connect(self.get_text)
 

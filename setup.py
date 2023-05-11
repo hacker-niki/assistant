@@ -26,11 +26,15 @@ build_exe_options = {
         "pybrightness",
         "fuzzywuzzy",
         "pydub",
-        "torch"
+        "torch",
+        "Levenshtein",
+        "PyQt5"
     ],
     "packages": ["os", "sys"],
     "include_files": [
-        (direct, "lib/pyttsx3")
+        (direct, "lib/pyttsx3"),
+        "data",
+        "commands.json"
     ]
 }
 

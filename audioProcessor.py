@@ -66,7 +66,7 @@ class AudioProcessor:
             return ""
 
     def answer_text_to_audio(self, text):
-        sample_rate = 24000
+        sample_rate = 48000
         speaker = 'baya'
 
         audio_paths = self.model.save_wav(text=text,

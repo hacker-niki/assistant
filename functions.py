@@ -1,4 +1,5 @@
 import datetime
+import json
 import re
 import requests
 from googletrans import Translator
@@ -22,7 +23,7 @@ import openai
 import os
 import pywinauto
 import random
-import geocoder
+
 
 
 def extract_city_function(command: str):
@@ -37,7 +38,10 @@ def extract_city_function(command: str):
 def weather_function(a):
     # замените на свой API ключ OpenWeatherMap
     api_key = "d3b9ddd02bf307000417e311a213a7f4"
-    base_url = f"https://api.openweathermap.org/data/2.5/weather?q={user.client.town}&appid={api_key}&units=metric"
+    with open('data.json', 'r') as file:
+        data = json.load(file)
+        town = data['town']
+    base_url = f"https://api.openweathermap.org/data/2.5/weather?q={town}&appid={api_key}&units=metric"
     response = requests.get(base_url)
     translator = Translator()
     if response.status_code == 200:
@@ -47,7 +51,7 @@ def weather_function(a):
         humidity = data["main"]["humidity"]
         wind_speed = data["wind"]["speed"]
         return translator.translate(text=
-                                    f"In {user.client.town} {weather}, temperature {int(temperature)} degrees celsius, humidity {int(humidity)} percents, and wind speed {int(wind_speed)} meters per second.",
+                                    f"In {town} {weather}, temperature {int(temperature)} degrees celsius, humidity {int(humidity)} percents, and wind speed {int(wind_speed)} meters per second.",
                                     dest="ru").text
     else:
         return "Извините, я не смог получить информацию о погоде в этом городе."
@@ -290,13 +294,6 @@ def sound_function(a) -> str:
      volume.SetMasterVolumeLevelScalar(new_volume, None)
      return ""
     
-def where_function(a) -> str:
-    g = geocoder.ip('me')
-    lat = g.latlng[0]
-    lng = g.latlng[1]
-    str = f"Вы находитесь на координатах {lat} градусов широты и {lng} градусов долготы"
-    return str
-
 # def app_function(a) -> str:
 #     sentence = ' '.join(a)
 #     settings = AudioProcessor()
