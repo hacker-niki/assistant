@@ -28,7 +28,9 @@ build_exe_options = {
         "pydub",
         "torch",
         "Levenshtein",
-        "PyQt5"
+        "PyQt5",
+        "wikipedia",
+        "openai"
     ],
     "packages": ["os", "sys"],
     "include_files": [
@@ -43,5 +45,5 @@ setup(
     version="0.5",
     description="Voice assistant for programmers",
     options={"build_exe": build_exe_options},
-    executables=[Executable("app.py", target_name="assistant")],
+    executables=[Executable("ui.py", target_name="assistant")],
 )
