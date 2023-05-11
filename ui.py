@@ -7,7 +7,10 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import QSize
 import json
 import sounddevice as sd
-
+from assistant import Assistant
+import app
+import user
+from user import client
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -83,10 +86,13 @@ class MainWindow(QMainWindow):
             with open("data.json", "r") as f:
                 data = json.load(f)
                 key = data['key']
+                #client.town = data['town']
                 town = data['town']
                 language = data['language']
                 if (key=='') | (town =='') | (language ==''):
                     self.open_new_window()
+                assistant = Assistant()
+                assistant.run()
                 print(data)
         else:
             self.open_new_window()
