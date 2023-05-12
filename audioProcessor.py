@@ -15,7 +15,7 @@ class AudioProcessor:
         try:
             self.recognizer = sr.Recognizer()
             self.engine = pyttsx3.init()
-            device = torch.device('cpu')
+            device = torch.device(('cuda' if torch.cuda.is_available() else 'cpu'))
             torch.set_num_threads(4)
             local_file = 'data\\model.pt'
 

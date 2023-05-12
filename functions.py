@@ -25,7 +25,6 @@ import pywinauto
 import random
 
 
-
 def extract_city_function(command: str):
     pattern = r"погода в ([\w\s]+)"
     match = re.search(pattern, command.lower())
@@ -108,6 +107,7 @@ def launch_desktop_spotify(a) -> str:
 def mood_function(a) -> str:
     return "Какие дела могут быть у робота? Не крашнулся и то хорошо"
 
+
 def joke_function(a) -> str:
     random_number = random.randint(0, 3)
     if random_number == 0:
@@ -118,6 +118,7 @@ def joke_function(a) -> str:
         return "Уходя из квартиры, делай селфи с утюгом! Так ты избежишь ненужных сомнений."
     elif random_number == 3:
         return "Колобок повесился, ахаххаха"
+
 
 def commands_function(a) -> str:
     return "Пока что я могу: повторить за вами, настроить яркость и звук, выключить компьютер, изменить расскладку клавиатуры, подбросить монетку, рассказать или написать что-нибудь, найти информацию в интернете, рассказать прогноз погоды, найти видео в ютубе, рассказать анекдот, сказать сколько сейчас времени, найти определение в википедии, настроить данные о пользователе,  поприветсвовать вас, попрощаться с вами, найти песню в спотифай, также вы можете поинтересоваться как у меня дела"
@@ -205,16 +206,16 @@ def repeat_function(a) -> str:
     return ""
 
 
-
 # функция работает по типу яркость + число на которое надо установить текущюу яркость в процентах
 def brightness_function(a) -> str:
     sentence = ' '.join(a)
     number = int(re.findall(r'\d+', sentence)[0] + re.findall(r'\d+', sentence)[1])
     pybrightness.custom(number)
     return ""
-    
+
+
 # оч опасная функция честно первый раз было оч страшно запускать
-def off_function (a) -> str:
+def off_function(a) -> str:
     subprocess.call('shutdown /s /t 2', shell=True)
     return ""
 
@@ -238,7 +239,7 @@ def write_function_function(a) -> str:
         engine=model_engine,
         prompt=sentence,
         max_tokens=3000,
-        n = 1,
+        n=1,
         stop=None,
         temperature=0.5,
     )
@@ -252,7 +253,8 @@ def write_function_function(a) -> str:
         os.system("C:\\exe.win-amd64-3.10\\example.txt")
         return "Задание выполнено"
     except:
-        return "Задание не выполнено"м
+        return "Задание не выполнено"
+
 
 def say_function(a) -> str:
     sentence = "расскажи " + ''.join(a)
@@ -265,7 +267,7 @@ def say_function(a) -> str:
         engine=model_engine,
         prompt=sentence,
         max_tokens=2000,
-        n = 1,
+        n=1,
         stop=None,
         temperature=0.5,
     )
@@ -275,25 +277,27 @@ def say_function(a) -> str:
 
     return generated_text
 
+
 def coin_function(a) -> str:
     random_number = random.randint(0, 1)
     if random_number == 0:
         return "Выпал орел"
     else:
         return "Выпала решка"
-    
+
+
 def sound_function(a) -> str:
-     devices = AudioUtilities.GetSpeakers()
-     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-     volume = cast(interface, POINTER(IAudioEndpointVolume))
-     current_volume = volume.GetMasterVolumeLevelScalar()
-     if current_volume == 0:
+    devices = AudioUtilities.GetSpeakers()
+    interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+    volume = cast(interface, POINTER(IAudioEndpointVolume))
+    current_volume = volume.GetMasterVolumeLevelScalar()
+    if current_volume == 0:
         new_volume = 0.5
-     else:
-         new_volume = 0
-     volume.SetMasterVolumeLevelScalar(new_volume, None)
-     return ""
-    
+    else:
+        new_volume = 0
+    volume.SetMasterVolumeLevelScalar(new_volume, None)
+    return ""
+
 # def app_function(a) -> str:
 #     sentence = ' '.join(a)
 #     settings = AudioProcessor()
