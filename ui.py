@@ -84,8 +84,8 @@ class MainWindow(QMainWindow):
         self.new_window.show()
 
     def start_button_pressed(self):
-        if os.stat('../../../Downloads/Telegram Desktop/data.json').st_size != 0:
-            with open("../../../Downloads/Telegram Desktop/data.json", "r") as f:
+        if os.stat('data.json').st_size != 0:
+            with open("data.json", "r") as f:
                 data = json.load(f)
                 key = data['key']
                 # client.town = data['town']
@@ -183,7 +183,7 @@ class NewWindow(QMainWindow):
             "language": language
         }
 
-        with open("../../../Downloads/Telegram Desktop/data.json", "w") as f:
+        with open("data.json", "w") as f:
             json.dump(data, f)
 
         print(key)
@@ -197,7 +197,7 @@ class NewWindow(QMainWindow):
             self.label.setText("Microphone is not available")
 
     def autofill_data(self):
-        with open('../../../Downloads/Telegram Desktop/data.json', 'r') as f:
+        with open('data.json', 'r') as f:
             data = json.load(f)
         key = data['key']
         town = data['town']
