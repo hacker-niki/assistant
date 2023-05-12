@@ -36,7 +36,9 @@ build_exe_options = {
     "include_files": [
         (direct, "lib/pyttsx3"),
         "data",
-        "commands.json"
+        "commands.json",
+        "uiData",
+        "data.json"
     ]
 }
 
