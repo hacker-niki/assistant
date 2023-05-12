@@ -226,9 +226,11 @@ def key_board_function(a) -> str:
 
 def write_function_function(a) -> str:
     sentence = "напиши " + ''.join(a)
+    settings = AudioProcessor()
 
+    settings.answer_text_to_audio("Выполняю")
     print(sentence)
-    openai.api_key = "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"
+    openai.api_key = "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"
     model_engine = "text-davinci-002"
     openai.api_base = "https://api.openai.com/v1/"
 
@@ -245,14 +247,12 @@ def write_function_function(a) -> str:
     generated_text = message.strip()
     try:
         answer = "Запрос: " + sentence + ' ' + generated_text
-        with open('function.txt', 'w') as f:
+        with open("C:\\exe.win-amd64-3.10\\example.txt", 'w') as f:
             f.write(answer)
-        os.system("function.txt")
+        os.system("C:\\exe.win-amd64-3.10\\example.txt")
         return "Задание выполнено"
-
     except:
-        return "Задание не выполнено"
-
+        return "Задание не выполнено"м
 
 def say_function(a) -> str:
     sentence = "расскажи " + ''.join(a)
