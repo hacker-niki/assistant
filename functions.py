@@ -298,6 +298,26 @@ def sound_function(a) -> str:
     volume.SetMasterVolumeLevelScalar(new_volume, None)
     return ""
 
+#Потестите плиз функцию у меня выдает оч странную ошибку
+def translator_function(a)->str:
+    sentence = ''.join(a)
+    translator = Translator()
+    translation = translator.translate(sentence, dest='ru', src='en')
+    return translation.text
+
+def random_function(a)->str:
+    sentence = ''.join(a)
+    print(sentence)
+    pattern = r'\d+'
+    matches = re.findall(pattern, sentence)
+    numbers = [int(match) for match in matches]
+    print(numbers)
+    try:
+        random_number = random.randint(numbers[0], numbers[1])
+        return random_number
+    except:
+        return "Не удалось получить число"
+
 # def app_function(a) -> str:
 #     sentence = ' '.join(a)
 #     settings = AudioProcessor()
