@@ -288,7 +288,8 @@ def get_text():
         "username": username,
         "town": town,
         "picovoice_key": picovoice_key,
-        "openAI_key": openAI_key
+        "openAI_key": openAI_key,
+        "language": "rus"
     }
 
     with open("data.json", "w") as f:
