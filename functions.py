@@ -1,28 +1,25 @@
 import datetime
 import json
-import re
-import requests
-from googletrans import Translator
-import pyautogui as pg
-import keyboard
-import webbrowser
-import speech_recognition as sr
-import user
-from user import client
-from audioProcessor import AudioProcessor
-import time
-import math
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-import pybrightness
-import subprocess
-import platform
-import wikipedia
-import openai
 import os
-import pywinauto
 import random
+import re
+import subprocess
+import time
+import webbrowser
+from ctypes import cast, POINTER
+
+import keyboard
+import openai
+import pyautogui as pg
+import pybrightness
+import requests
+import speech_recognition as sr
+from comtypes import CLSCTX_ALL
+from googletrans import Translator
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+
+from audioProcessor import AudioProcessor
+from user import client
 
 
 def extract_city_function(command: str):
@@ -35,8 +32,7 @@ def extract_city_function(command: str):
 
 
 def weather_function(a):
-    # замените на свой API ключ OpenWeatherMap
-    api_key = "d3b9ddd02bf307000417e311a213a7f4"
+    api_key = "d3b9ddd02bf307000417e311a213a7f4"  # Open Weather
     with open('data.json', 'r') as file:
         data = json.load(file)
         town = data['town']
@@ -298,14 +294,16 @@ def sound_function(a) -> str:
     volume.SetMasterVolumeLevelScalar(new_volume, None)
     return ""
 
-#Потестите плиз функцию у меня выдает оч странную ошибку
-def translator_function(a)->str:
+
+# Потестите плиз функцию у меня выдает оч странную ошибку
+def translator_function(a) -> str:
     sentence = ''.join(a)
     translator = Translator()
     translation = translator.translate(sentence, dest='ru', src='en')
     return translation.text
 
-def random_function(a)->str:
+
+def random_function(a) -> str:
     sentence = ''.join(a)
     print(sentence)
     pattern = r'\d+'
