@@ -147,8 +147,8 @@ def weather_function(a):
         humidity = data["main"]["humidity"]
         wind_speed = data["wind"]["speed"]
         return translator.translate(text=
-                                    f"In {town} {weather}, temperature {changeNumberIntoLetter(temperature)} degrees "
-                                    f"celsius, humidity {changeNumberIntoLetter(humidity)} percents, and wind speed {changeNumberIntoLetter(wind_speed)} "
+                                    f"In {town} {weather}, temperature {changeNumberIntoLetter(int(temperature))} degrees "
+                                    f"celsius, humidity {changeNumberIntoLetter(int(humidity))} percents, and wind speed {changeNumberIntoLetter(int(wind_speed))}"
                                     f"meters per second.",
                                     dest="ru").text
     else:
@@ -166,7 +166,7 @@ def doing_function(a) -> str:
 def time_function(a) -> str:
     now = datetime.datetime.now()
     conv = Converter()
-    return "Сейчас " + conv.convert(now.hour) + ":" + conv.convert(now.minute)
+    return "Сейчас " + conv.convert(now.hour) + " часов " + conv.convert(now.minute) + " минут"
 
 
 def stop_function(a) -> str:
