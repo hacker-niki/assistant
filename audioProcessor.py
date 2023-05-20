@@ -1,8 +1,9 @@
-import speech_recognition as sr
-import pyttsx3
+import os
 import traceback
 from sys import exit
-import os
+
+import pyttsx3
+import speech_recognition as sr
 import torch
 import torch.package
 from pydub import AudioSegment
@@ -67,6 +68,9 @@ class AudioProcessor:
 
     def answer_text_to_audio(self, text):
         sample_rate = 48000
+        if text == "":
+            return
+
         speaker = 'eugene'
 
         audio_paths = self.model.save_wav(text=text,

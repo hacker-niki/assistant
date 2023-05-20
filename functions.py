@@ -15,11 +15,112 @@ import pybrightness
 import requests
 import speech_recognition as sr
 from comtypes import CLSCTX_ALL
+from fuzzywuzzy import fuzz
 from googletrans import Translator
+from num_to_rus import Converter
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 from audioProcessor import AudioProcessor
 from user import client
+
+
+def changeNumberIntoLetter(value):
+    number = numToLetter(value)
+    return number
+
+
+def numToLetter(value):  # The function converts the numbers into letters.
+    if value == 1:
+        return 'one'
+    elif value == 2:
+        return 'two'
+    elif value == 3:
+        return 'three'
+    elif value == 4:
+        return 'four'
+    elif value == 5:
+        return 'five'
+    elif value == 6:
+        return 'six'
+    elif value == 7:
+        return 'seven'
+    elif value == 8:
+        return 'eight'
+    elif value == 9:
+        return 'nine'
+    elif value == 10:
+        return 'ten'
+    elif value == 11:
+        return 'eleven'
+    elif value == 12:
+        return 'twelve'
+    elif value == 13:
+        return 'thirteen'
+    elif 13 < value <= 19:
+        return composeTeen(value)
+    elif value > 19:
+        if value == 20:
+            return 'twenty'
+        elif value == 30:
+            return 'thirty'
+        elif value == 50:
+            return 'fifty'
+        elif value == 10 ** 2:
+            return 'one hundred'
+        elif value == 10 ** 3:
+            return 'one thousand'
+        elif value == 10 ** 5:
+            return 'one hundred thousand'
+        elif value == 10 ** 6:
+            return 'one milion'
+        elif value >= 20:
+            return composeNumbers(value)
+        else:
+            exit('Out of range')
+    else:
+        return ''
+
+
+def composeNumbers(value):  # The function build every number biger than 40
+    if 40 <= value < 10 ** 2:
+        value1 = int(str(value)[0])
+        value2 = int(str(value)[1])
+        if value1 == 2:
+            value1 = 'twen'
+            return value1 + 'ty' + '-' + numToLetter(value2)
+        if value1 == 3:
+            value1 = 'thir'
+            return value1 + 'ty' + '-' + numToLetter(value2)
+        if value1 == 8:
+            value1 = 'eigh'
+            return value1 + 'ty' + '-' + numToLetter(value2)
+        elif value1 == 5:
+            value1 = 'fif'
+            return value1 + 'ty' + '-' + numToLetter(value2)
+        return numToLetter(value1) + 'ty' + '-' + numToLetter(value2)
+    elif 10 ** 2 <= value < 10 ** 3:
+        value1 = int(str(value)[0])
+        value2 = int(str(value)[1:])
+        return numToLetter(value1) + ' ' + 'hundred' + ' ' + numToLetter(value2)
+    elif 10 ** 3 <= value < 10 ** 4:
+        value1 = int(str(value)[0])
+        value2 = int(str(value)[1:])
+    elif 10 ** 4 <= value < 10 ** 5:
+        value1 = int(str(value)[0:2])
+        value2 = int(str(value)[2:])
+    elif 10 ** 5 <= value < 10 ** 6:
+        value1 = int(str(value)[0:3])
+        value2 = int(str(value)[3:])
+    return numToLetter(value1) + ' ' + 'thousand' + ' ' + numToLetter(value2)
+
+
+def composeTeen(value):  # The function takes the unit and then converts it into letter to build the word.
+    value = int(str(value)[
+                    -1])  # It turns elem in string to take the last position and it converts it again in integer to change it in letters. Then it composes the word adding 'teen' at the end.
+    value = numToLetter(value)
+    if value == 'five': value = 'fif'
+    value = value + 'teen'
+    return value
 
 
 def extract_city_function(command: str):
@@ -46,7 +147,9 @@ def weather_function(a):
         humidity = data["main"]["humidity"]
         wind_speed = data["wind"]["speed"]
         return translator.translate(text=
-                                    f"In {town} {weather}, temperature {int(temperature)} degrees celsius, humidity {int(humidity)} percents, and wind speed {int(wind_speed)} meters per second.",
+                                    f"In {town} {weather}, temperature {changeNumberIntoLetter(temperature)} degrees "
+                                    f"celsius, humidity {changeNumberIntoLetter(humidity)} percents, and wind speed {changeNumberIntoLetter(wind_speed)} "
+                                    f"meters per second.",
                                     dest="ru").text
     else:
         return "Извините, я не смог получить информацию о погоде в этом городе."
@@ -62,7 +165,8 @@ def doing_function(a) -> str:
 
 def time_function(a) -> str:
     now = datetime.datetime.now()
-    return "Сейчас " + str(now.hour) + ":" + str(now.minute)
+    conv = Converter()
+    return "Сейчас " + conv.convert(now.hour) + ":" + conv.convert(now.minute)
 
 
 def stop_function(a) -> str:
@@ -311,17 +415,53 @@ def random_function(a) -> str:
     numbers = [int(match) for match in matches]
     print(numbers)
     try:
+        conv = Converter()
         random_number = random.randint(numbers[0], numbers[1])
-        return random_number
+        return conv.convert(random_number)
     except:
         return "Не удалось получить число"
 
-# def app_function(a) -> str:
-#     sentence = ' '.join(a)
-#     settings = AudioProcessor()
-#     settings.answer_text_to_audio("Скажите название приложения")
-#     audio = recognize_speech()
-#     text = settings.audio_to_text(audio)
-#     pyautogui.press("win")
-#     pyautogui.typewrite(text)
-#     pyautogui.press("enter")
+
+def app_function(app_name) -> str:
+    print(app_name)
+    app_name = app_name.lower()
+    program_files = ["C:/Program Files/", "C:/Program Files (x86)/"]
+
+    def find_apps(root, app_name):
+        best_score = 0
+        best_match = None
+
+        for path, dirs, files in os.walk(root):
+            for file in files:
+                if file.endswith('.exe'):
+                    exe_name = file[:-4].lower()  # remove '.exe' and convert to lower case
+                    folder_name = path.split(os.sep)[-1].lower()  # get the name of the folder
+
+                    exe_score = fuzz.partial_ratio(app_name, exe_name)
+                    folder_score = fuzz.partial_ratio(app_name, folder_name)
+
+                    # combine the scores (you may use different weights)
+                    total_score = 0.6 * exe_score + 0.4 * folder_score
+
+                    if total_score > best_score:
+                        best_score = total_score
+                        best_match = os.path.join(path, file)
+
+        return best_match
+
+    best_match = None
+    best_score = 0
+
+    for directory in program_files:
+        match = find_apps(directory, app_name)
+        if match:
+            score = fuzz.ratio(app_name, match)
+            if score > best_score:
+                best_score = score
+                best_match = match
+
+    if best_match:
+        subprocess.call(best_match)
+        return "Открываю."
+    else:
+        return "Приложение не найдено."
