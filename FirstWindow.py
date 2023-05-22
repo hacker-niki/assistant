@@ -4,10 +4,10 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage
 
 import sounddevice as sd
-from tkPDFViewer import tkPDFViewer as pdf
+from tkPDFViewer2 import tkPDFViewer as pdf
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"build\assets\frame0")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame0")
 
 
 def relative_to_assets(path: str) -> Path:
