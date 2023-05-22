@@ -41,7 +41,7 @@ class PushButton_start(QPushButton):
                 if (username == '') | (town == '') | (picovoice_key == '') | (openAI_key == ''):
                     self.open_new_window()
                 print(data)
-                t = multiprocessing.Process(target=startAssistant(), daemon=True)
+                t = multiprocessing.Process(target=startAssistant())
                 t.start()
                 t.join()
         else:

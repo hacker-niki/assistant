@@ -422,6 +422,10 @@ def random_function(a) -> str:
         return "Не удалось получить число"
 
 
+def run_app(best_match):
+    os.popen(best_match)
+
+
 def app_function(app_name) -> str:
     print(app_name)
     app_name = app_name.lower()
@@ -434,13 +438,12 @@ def app_function(app_name) -> str:
         for path, dirs, files in os.walk(root):
             for file in files:
                 if file.endswith('.exe'):
-                    exe_name = file[:-4].lower()  # remove '.exe' and convert to lower case
-                    folder_name = path.split(os.sep)[-1].lower()  # get the name of the folder
+                    exe_name = file[:-4].lower()
+                    folder_name = path.split(os.sep)[-1].lower()
 
                     exe_score = fuzz.partial_ratio(app_name, exe_name)
                     folder_score = fuzz.partial_ratio(app_name, folder_name)
 
-                    # combine the scores (you may use different weights)
                     total_score = 0.6 * exe_score + 0.4 * folder_score
 
                     if total_score > best_score:
@@ -461,7 +464,7 @@ def app_function(app_name) -> str:
                 best_match = match
 
     if best_match:
-        subprocess.call(best_match)
+        run_app(best_match=best_match)
         return "Открываю."
     else:
         return "Приложение не найдено."
