@@ -30,7 +30,8 @@ build_exe_options = {
         "Levenshtein",
         "PyQt5",
         "wikipedia",
-        "openai"
+        "openai",
+        "tkPDFViewer2"
     ],
     "packages": ["os", "sys"],
     "include_files": [
@@ -38,7 +39,8 @@ build_exe_options = {
         "data",
         "commands.json",
         "uiData",
-        "data.json"
+        "data.json",
+        "assets"
     ]
 }
 

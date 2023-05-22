@@ -1,25 +1,21 @@
-import sys
+import json
+import multiprocessing
 import os
+import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox
 from PyQt5 import QtCore, QtMultimedia
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5 import uic
 from PyQt5.QtCore import QSize
-import json
-import sounddevice as sd
-import tkinter as tk
-from assistant import Assistant
-import app
-import user
-from user import client
-#jhjh
-from tkinter import *
-from tkinter import filedialog
-import tkinter as tk
-from tkPDFViewer import tkPDFViewer as pdf
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
+
 import FirstWindow
+from app import startAssistant
 
 amount = 0
+
+
 class PushButton_start(QPushButton):
     def __init__(self, parent=None):
         super(PushButton_start, self).__init__(parent)
@@ -34,8 +30,6 @@ class PushButton_start(QPushButton):
     def mouseReleaseEvent(self, event):
         self.setIcon(QIcon('uiData/start_light.png'))
         self.setIconSize(QSize(100, 100))
-        assistant = Assistant()
-        assistant.run()
 
     def start_button_pressed(self):
         if os.stat('data.json').st_size != 0:
@@ -49,6 +43,9 @@ class PushButton_start(QPushButton):
                 if (username == '') | (town == '') | (picovoice_key == '') | (openAI_key == ''):
                     self.open_new_window()
                 print(data)
+                t = multiprocessing.Process(target=startAssistant())
+                t.start()
+                t.join()
         else:
             self.open_new_window()
 
@@ -61,9 +58,7 @@ class PushButton_start(QPushButton):
             FirstWindow.App.window.mainloop()
         else:
             show_message()
-    #def open_new_window(self):
-     #   self.new_window = NewWindow()
-      #  self.new_window.show()
+
 
 class PushButton_log_in(QPushButton):
     def __init__(self, parent=None):
@@ -84,7 +79,7 @@ class PushButton_log_in(QPushButton):
     def open_new_window(self):
         global amount
         amount += 1
-        if (amount==1):
+        if (amount == 1):
             window = FirstWindow.App()
             FirstWindow.auto_fill()
             print(1)
@@ -92,15 +87,15 @@ class PushButton_log_in(QPushButton):
         else:
             show_message()
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('uiData/form1.ui', self)
-        self.setWindowTitle("Jarvis")
+        self.setWindowTitle("Quant")
         self.setStyleSheet("background-color: #000000;")
         self.path_to_silent_video = 'uiData/silent_video.avi'
         self.path_to_speech_video = 'uiData/speaking_video.avi'
-        # Ширина и высота видео-заставки.
 
         self.width_video = 470
         self.height_video = 350
@@ -138,7 +133,6 @@ class MainWindow(QMainWindow):
                                                  font-size: 15px;}')
 
         self.is_assistant_talking = 0
-        # Запускаем заставку.
         self.media1 = QtMultimedia.QMediaPlayer(self)
         self.media1.setVideoOutput(self.video)
         self.media1.setMedia(
@@ -204,6 +198,7 @@ def show_message():
         print("Нажата кнопка ОК")
     else:
         print("Нажата другая кнопка")
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
