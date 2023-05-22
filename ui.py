@@ -2,7 +2,8 @@ import json
 import multiprocessing
 import os
 import sys
-
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox
 from PyQt5 import QtCore, QtMultimedia
 from PyQt5 import uic
 from PyQt5.QtCore import QSize
@@ -38,6 +39,7 @@ class PushButton_start(QPushButton):
                 town = data['town']
                 picovoice_key = data['picovoice_key']
                 openAI_key = data['openAI_key']
+                language = data['language']
                 if (username == '') | (town == '') | (picovoice_key == '') | (openAI_key == ''):
                     self.open_new_window()
                 print(data)
@@ -110,6 +112,26 @@ class MainWindow(QMainWindow):
         self.label.setFixedWidth(150)
         self.label.setStyleSheet("background: black;")
 
+        # Определение вариантов ответов
+        self.variant_options = [' rus', ' eng']
+
+        # Создание элементов окна
+        self.buttonCombo = QComboBox(self)
+        self.buttonCombo.move(130, 20)
+        self.buttonCombo.setFixedSize(65, 31)
+        self.buttonCombo.addItems(self.variant_options)
+        self.buttonCombo.currentIndexChanged.connect(self.onClick)
+
+        # Установка стиля
+        self.buttonCombo.setStyleSheet('QComboBox::drop-down {border: none;} \
+                                                 QComboBox::down-arrow \
+                                                 {image: url(down_arrow.png);} \
+                                                 QComboBox {border-radius: 15px; \
+                                                 padding: 1px 18px 1px 3px; \
+                                                 background-color: #9d3abf;\
+                                                 color: white; \
+                                                 font-size: 15px;}')
+
         self.is_assistant_talking = 0
         self.media1 = QtMultimedia.QMediaPlayer(self)
         self.media1.setVideoOutput(self.video)
@@ -141,6 +163,23 @@ class MainWindow(QMainWindow):
 
     def setIsAssistantTalking(self, status):
         self.is_assistant_talking = status
+
+    def onClick(self):
+        # Обработка выбора варианта ответа
+        selected_variant = self.variant_options[self.buttonCombo.currentIndex()]
+
+        with open('data.json', 'r') as file:
+            data = json.load(file)
+
+        # Изменяем значение ключа "example_key"
+        data["language"] = selected_variant
+
+        # Открываем файл на запись и сохраняем изменения
+        with open('data.json', 'w') as file:
+            json.dump(data, file)
+
+        print(f'Выбран вариант: {selected_variant}')
+
 
 
 def show_message():
