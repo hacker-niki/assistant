@@ -10,6 +10,7 @@ from PyQt5 import QtCore, QtMultimedia
 from PyQt5 import uic
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
 from PyQt5.QtWidgets import QComboBox
 
@@ -99,7 +100,7 @@ class Manual(QWidget):
     def build(self):
         self.setGeometry(300, 300, 300, 300)
         hbox = QHBoxLayout(self)
-        pixmap = QPixmap("uiData//Квант.png")
+        pixmap = QPixmap("uiData/Квант.png")
         pixmap = pixmap.scaled(pixmap.width() // 2, pixmap.height() // 2)
         lbl = QLabel(self)
         lbl.setPixmap(pixmap)
@@ -109,6 +110,7 @@ class Manual(QWidget):
         self.move(20, 20)
         self.setWindowTitle('Red Rock')
         self.setWindowTitle('MANUAL')
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
