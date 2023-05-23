@@ -2,7 +2,10 @@ import json
 import multiprocessing
 import os
 import sys
-
+from PyQt5 import uic
+from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import (QWidget)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox, QHBoxLayout
 from PyQt5 import QtCore, QtMultimedia
 from PyQt5 import uic
 from PyQt5.QtCore import QSize
@@ -87,6 +90,25 @@ class PushButton_log_in(QPushButton):
         else:
             show_message()
 
+class Manual(QWidget):
+    def __init__(self,
+                 parent=None):  # если собрался передавать аргументы, то не забудь их принять (nameofargument, self, parent=None)
+        super().__init__(parent, QtCore.Qt.Window)
+        self.build()  # ну и передать в открывающееся окно соответственно (nameofargument, self)
+
+    def build(self):
+        self.setGeometry(300, 300, 300, 300)
+        hbox = QHBoxLayout(self)
+        pixmap = QPixmap("uiData//Квант.png")
+        pixmap = pixmap.scaled(pixmap.width() // 2, pixmap.height() // 2)
+        lbl = QLabel(self)
+        lbl.setPixmap(pixmap)
+        hbox.addWidget(lbl)
+        self.setLayout(hbox)
+
+        self.move(20, 20)
+        self.setWindowTitle('Red Rock')
+        self.setWindowTitle('MANUAL')
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -131,6 +153,21 @@ class MainWindow(QMainWindow):
                                                  background-color: #9d3abf;\
                                                  color: white; \
                                                  font-size: 15px;}')
+
+        self.buttonManual = QPushButton('  MANUAL', self)
+        self.buttonManual.resize(85, 31)
+        self.buttonManual.move(370, 20)
+        self.buttonManual.clicked.connect(self.openMan)
+
+        # Установка стиля
+        self.buttonManual.setStyleSheet('QPushButton::drop-down {border: none;} \
+                                                         QPushButton::down-arrow \
+                                                         {image: url(down_arrow.png);} \
+                                                         QPushButton {border-radius: 15px; \
+                                                         padding: 1px 18px 1px 3px; \
+                                                         background-color: #9d3abf;\
+                                                         color: white; \
+                                                         font-size: 13px;}')
 
         self.is_assistant_talking = 0
         self.media1 = QtMultimedia.QMediaPlayer(self)
@@ -179,6 +216,10 @@ class MainWindow(QMainWindow):
             json.dump(data, file)
 
         print(f'Выбран вариант: {selected_variant}')
+
+    def openMan(self):
+        self.manual = Manual(self)  # здесь можешь передавать аргументы во второе окно (nameofargument, self)
+        self.manual.show()
 
 
 def show_message():
