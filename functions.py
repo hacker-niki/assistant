@@ -307,8 +307,14 @@ def repeat_function(a) -> str:
 
 # функция работает по типу яркость + число на которое надо установить текущюу яркость в процентах
 def brightness_function(a) -> str:
-    sentence = ' '.join(a)
-    number = int(re.findall(r'\d+', sentence)[0] + re.findall(r'\d+', sentence)[1])
+    sentence = ''.join(a)
+    try:
+        pattern = r"\d+"
+        numbers = re.findall(pattern, sentence)
+        number = int(numbers[0])
+    except:
+        return "Извините но вам нужно указать значение"
+
     pybrightness.custom(number)
     return "Меняю яркость"
 
