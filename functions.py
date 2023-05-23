@@ -300,9 +300,8 @@ def recognize_speech():
 
 
 def repeat_function(a) -> str:
-    sentence = ''.join(a)
     repeat = AudioProcessor()
-    repeat.answer_text_to_audio(sentence)
+    repeat.answer_text_to_audio(a)
     return ""
 
 
@@ -311,7 +310,7 @@ def brightness_function(a) -> str:
     sentence = ' '.join(a)
     number = int(re.findall(r'\d+', sentence)[0] + re.findall(r'\d+', sentence)[1])
     pybrightness.custom(number)
-    return ""
+    return "Меняю яркость"
 
 
 # оч опасная функция честно первый раз было оч страшно запускать
@@ -323,37 +322,6 @@ def off_function(a) -> str:
 def key_board_function(a) -> str:
     keyboard.press_and_release('left alt + shift')
     return ""
-
-
-def write_function_function(a) -> str:
-    sentence = "напиши " + ''.join(a)
-    settings = AudioProcessor()
-
-    settings.answer_text_to_audio("Выполняю")
-    print(sentence)
-    openai.api_key = "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"
-    model_engine = "text-davinci-002"
-    openai.api_base = "https://api.openai.com/v1/"
-
-    completions = openai.Completion.create(
-        engine=model_engine,
-        prompt=sentence,
-        max_tokens=3000,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
-
-    message = completions.choices[0].text
-    generated_text = message.strip()
-    try:
-        answer = "Запрос: " + sentence + ' ' + generated_text
-        with open("C:\\exe.win-amd64-3.10\\example.txt", 'w') as f:
-            f.write(answer)
-        os.system("C:\\exe.win-amd64-3.10\\example.txt")
-        return "Задание выполнено"
-    except:
-        return "Задание не выполнено"
 
 
 def say_function(a) -> str:
@@ -379,7 +347,7 @@ def say_function(a) -> str:
 
 
 def coin_function(a) -> str:
-    random_number = random.randint(0, 1)
+    random_number = random.randint(0, 2)
     if random_number == 0:
         return "Выпал орел"
     else:

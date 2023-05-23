@@ -47,19 +47,21 @@ class Assistant:
                 recorder.stop()
                 while True:
                     command = self.recognize_speech()
-                    answer = self.handler.map_string_to_function(command)
+                    try:
+                        answer = self.handler.map_string_to_function(command)
+                    except:
+                        self.audio.answer_text_to_audio("Ошибка во время выполнения функции!")
+                        break
                     if not answer[0]:
                         self.audio.answer_text_to_audio("Завершаю работу")
                         exit(0)
                     try:
                         self.audio.answer_text_to_audio(answer[1])
-                        break
                     except:
                         self.audio.answer_text_to_audio("Ошибка во время выполнения функции!")
-                        break
+                    break
 
-
-# Функция для распознавания речи
+    # Функция для распознавания речи
     def recognize_speech(self):
         # os.remove("microphone-results.wav")
         self.audio.answer_text_to_audio("Да, господин")
