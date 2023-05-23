@@ -11,6 +11,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
+from PyQt5.QtWidgets import QComboBox
 
 import FirstWindow
 from app import startAssistant
@@ -219,7 +220,6 @@ class MainWindow(QMainWindow):
     def openMan(self):
         self.manual = Manual(self)  # здесь можешь передавать аргументы во второе окно (nameofargument, self)
         self.manual.show()
-
 
 
 def show_message():

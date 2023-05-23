@@ -1,12 +1,13 @@
+import json
 import multiprocessing
 import os
 import traceback
-from sys import exit
 
 import pyttsx3
 import speech_recognition as sr
 import torch
 import torch.package
+from googletrans import Translator
 from pydub import AudioSegment
 from pydub.playback import play
 
@@ -19,22 +20,40 @@ class AudioProcessor:
             self.engine = pyttsx3.init()
             device = torch.device(('cuda' if torch.cuda.is_available() else 'cpu'))
             torch.set_num_threads(4)
-            local_file = 'data\\model.pt'
-
-            if not os.path.isfile(local_file):
+            russian_tts = 'data/model_ru.pt'
+            english_tts = 'data/model_en.pt'
+            self.lang = 'rus'
+            tts = None
+            with open('data.json', 'r') as file:
+                data = json.load(file)
+                key = data['language']
+                if key == 'rus':
+                    tts = russian_tts
+                else:
+                    tts = english_tts
+                    self.lang = 'eng'
+                    self.translator = Translator()
+            print(1)
+            if not os.path.isfile(russian_tts):
                 torch.hub.download_url_to_file('https://models.silero.ai/models/tts/ru/v3_1_ru.pt',
-                                               local_file)
-            self.model = torch.package.PackageImporter(local_file).load_pickle("tts_models", "model")
+                                               russian_tts)
+            if not os.path.isfile(english_tts):
+                torch.hub.download_url_to_file('https://models.silero.ai/models/tts/en/v3_en.pt',
+                                               english_tts)
+            print(1)
+            self.model = torch.package.PackageImporter(tts).load_pickle("tts_models", "model")
+            print(1)
             self.model.to(device)
+            print(1)
             print(sr.Microphone.list_working_microphones())
             self.microphone = sr.Microphone()
+            print(1)
             with self.microphone:
                 self.recognizer.adjust_for_ambient_noise(self.microphone, duration=1)
 
         except:
             traceback.print_exc()
-            print(("Sorry, speech service is unavailable. Try again later", "red"))
-            exit(1)
+            print("Sorry, speech service is unavailable. Try again later")
 
     def record_and_recognize_audio(self):
         with self.microphone:
@@ -52,8 +71,7 @@ class AudioProcessor:
                 recognized_data = self.audio_to_text(audio)
             except:
                 print("Unable to recognize")
-                exit(1)
-        # print(recognized_data)
+                return "Невозможно распознать речь"
         return recognized_data
 
     def audio_to_text(self, audio):
@@ -75,9 +93,18 @@ class AudioProcessor:
         if text == "":
             return
 
-        speaker = 'eugene'
+        speaker = ''
+        text_input = ''
 
-        audio_paths = self.model.save_wav(text=text,
+        if self.lang == 'rus':
+            speaker = 'eugene'
+            text_input = text
+
+        if self.lang == 'eng':
+            speaker = 'en_20'
+            text_input = self.translator.translate(text=text, dest='en').text
+
+        audio_paths = self.model.save_wav(text=text_input,
                                           speaker=speaker,
                                           sample_rate=sample_rate)
         p = multiprocessing.Process(target=self.run_audio(audio_paths))
