@@ -2,8 +2,11 @@ from assistant import Assistant
 
 
 def startAssistant():
-    assistant = Assistant()
-    assistant.run()
+    try:
+        assistant = Assistant()
+        assistant.run()
+    except:
+        print("Неизвестная ошибка ассистента")
 
 
 if __name__ == '__main__':

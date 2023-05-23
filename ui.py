@@ -2,13 +2,13 @@ import json
 import multiprocessing
 import os
 import sys
-from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox
+
 from PyQt5 import QtCore, QtMultimedia
 from PyQt5 import uic
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
+from PyQt5.QtWidgets import QComboBox
 
 import FirstWindow
 from app import startAssistant
@@ -113,7 +113,7 @@ class MainWindow(QMainWindow):
         self.label.setStyleSheet("background: black;")
 
         # Определение вариантов ответов
-        self.variant_options = [' rus', ' eng']
+        self.variant_options = ['rus', 'eng']
 
         # Создание элементов окна
         self.buttonCombo = QComboBox(self)
@@ -179,7 +179,6 @@ class MainWindow(QMainWindow):
             json.dump(data, file)
 
         print(f'Выбран вариант: {selected_variant}')
-
 
 
 def show_message():
