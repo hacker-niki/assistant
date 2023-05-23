@@ -1,25 +1,23 @@
-import sys
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox
-from PyQt5 import QtCore, QtMultimedia
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import QSize
 import json
-import sounddevice as sd
-import tkinter as tk
-from assistant import Assistant
-import app
-import user
-from user import client
-#jhjh
-from tkinter import *
-from tkinter import filedialog
-import tkinter as tk
-from tkPDFViewer import tkPDFViewer as pdf
+import multiprocessing
+import os
+import sys
+from PyQt5 import uic
+from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import (QWidget)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox, QHBoxLayout
+from PyQt5 import QtCore, QtMultimedia
+from PyQt5 import uic
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
+
 import FirstWindow
+from app import startAssistant
 
 amount = 0
+
+
 class PushButton_start(QPushButton):
     def __init__(self, parent=None):
         super(PushButton_start, self).__init__(parent)
@@ -34,8 +32,6 @@ class PushButton_start(QPushButton):
     def mouseReleaseEvent(self, event):
         self.setIcon(QIcon('uiData/start_light.png'))
         self.setIconSize(QSize(100, 100))
-        assistant = Assistant()
-        assistant.run()
 
     def start_button_pressed(self):
         if os.stat('data.json').st_size != 0:
@@ -49,6 +45,9 @@ class PushButton_start(QPushButton):
                 if (username == '') | (town == '') | (picovoice_key == '') | (openAI_key == ''):
                     self.open_new_window()
                 print(data)
+                t = multiprocessing.Process(target=startAssistant())
+                t.start()
+                t.join()
         else:
             self.open_new_window()
 
@@ -61,9 +60,7 @@ class PushButton_start(QPushButton):
             FirstWindow.App.window.mainloop()
         else:
             show_message()
-    #def open_new_window(self):
-     #   self.new_window = NewWindow()
-      #  self.new_window.show()
+
 
 class PushButton_log_in(QPushButton):
     def __init__(self, parent=None):
@@ -84,7 +81,7 @@ class PushButton_log_in(QPushButton):
     def open_new_window(self):
         global amount
         amount += 1
-        if (amount==1):
+        if (amount == 1):
             window = FirstWindow.App()
             FirstWindow.auto_fill()
             print(1)
@@ -92,15 +89,37 @@ class PushButton_log_in(QPushButton):
         else:
             show_message()
 
+<<<<<<<<< Temporary merge branch 1
+=========
+class Manual(QWidget):
+    def __init__(self,
+                 parent=None):  # если собрался передавать аргументы, то не забудь их принять (nameofargument, self, parent=None)
+        super().__init__(parent, QtCore.Qt.Window)
+        self.build()  # ну и передать в открывающееся окно соответственно (nameofargument, self)
+
+    def build(self):
+        self.setGeometry(300, 300, 300, 300)
+        hbox = QHBoxLayout(self)
+        pixmap = QPixmap("uiData//Квант.png")
+        pixmap = pixmap.scaled(pixmap.width() // 2, pixmap.height() // 2)
+        lbl = QLabel(self)
+        lbl.setPixmap(pixmap)
+        hbox.addWidget(lbl)
+        self.setLayout(hbox)
+
+        self.move(20, 20)
+        self.setWindowTitle('Red Rock')
+        self.setWindowTitle('MANUAL')
+>>>>>>>>> Temporary merge branch 2
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('uiData/form1.ui', self)
-        self.setWindowTitle("Jarvis")
+        self.setWindowTitle("Quant")
         self.setStyleSheet("background-color: #000000;")
         self.path_to_silent_video = 'uiData/silent_video.avi'
         self.path_to_speech_video = 'uiData/speaking_video.avi'
-        # Ширина и высота видео-заставки.
 
         self.width_video = 470
         self.height_video = 350
@@ -118,7 +137,7 @@ class MainWindow(QMainWindow):
         self.label.setStyleSheet("background: black;")
 
         # Определение вариантов ответов
-        self.variant_options = [' rus', ' eng']
+        self.variant_options = ['rus', 'eng']
 
         # Создание элементов окна
         self.buttonCombo = QComboBox(self)
@@ -137,8 +156,22 @@ class MainWindow(QMainWindow):
                                                  color: white; \
                                                  font-size: 15px;}')
 
+        self.buttonManual = QPushButton('  MANUAL', self)
+        self.buttonManual.resize(85, 31)
+        self.buttonManual.move(370, 20)
+        self.buttonManual.clicked.connect(self.openMan)
+
+        # Установка стиля
+        self.buttonManual.setStyleSheet('QPushButton::drop-down {border: none;} \
+                                                         QPushButton::down-arrow \
+                                                         {image: url(down_arrow.png);} \
+                                                         QPushButton {border-radius: 15px; \
+                                                         padding: 1px 18px 1px 3px; \
+                                                         background-color: #9d3abf;\
+                                                         color: white; \
+                                                         font-size: 13px;}')
+
         self.is_assistant_talking = 0
-        # Запускаем заставку.
         self.media1 = QtMultimedia.QMediaPlayer(self)
         self.media1.setVideoOutput(self.video)
         self.media1.setMedia(
@@ -186,6 +219,10 @@ class MainWindow(QMainWindow):
 
         print(f'Выбран вариант: {selected_variant}')
 
+    def openMan(self):
+        self.manual = Manual(self)  # здесь можешь передавать аргументы во второе окно (nameofargument, self)
+        self.manual.show()
+
 
 
 def show_message():
@@ -204,6 +241,7 @@ def show_message():
         print("Нажата кнопка ОК")
     else:
         print("Нажата другая кнопка")
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
