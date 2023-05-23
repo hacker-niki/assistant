@@ -90,7 +90,7 @@ class PushButton_log_in(QPushButton):
             FirstWindow.App.window.mainloop()
         else:
             show_message()
-## open ma
+
 class Manual(QWidget):
     def __init__(self,
                  parent=None):  # если собрался передавать аргументы, то не забудь их принять (nameofargument, self, parent=None)
