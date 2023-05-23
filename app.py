@@ -1,6 +1,10 @@
 from assistant import Assistant
-import user
 
-if __name__ == '__main__':
+
+def startAssistant():
     assistant = Assistant()
     assistant.run()
+
+
+if __name__ == '__main__':
+    startAssistant()

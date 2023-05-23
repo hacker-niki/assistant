@@ -1,8 +1,10 @@
-import speech_recognition as sr
-import pyttsx3
+import multiprocessing
+import os
 import traceback
 from sys import exit
-import os
+
+import pyttsx3
+import speech_recognition as sr
 import torch
 import torch.package
 from pydub import AudioSegment
@@ -44,7 +46,7 @@ class AudioProcessor:
                     file.write(audio.get_wav_data())
 
             except sr.WaitTimeoutError:
-                return ("Я ничего не услышал")
+                return "Я ничего не услышал"
             try:
                 print("Started recognition...")
                 recognized_data = self.audio_to_text(audio)
@@ -60,17 +62,23 @@ class AudioProcessor:
             return str(text)
         except sr.RequestError:
             print("Не удалось подключиться к сервису распознавания речи Google")
-            return ""
+            return "Не удалось подключиться к сервису распознавания речи Google"
         except sr.UnknownValueError:
             print("Не расслышал, что Вы сказали. Повторите")
-            return ""
+            return "Не расслышал, что Вы сказали. Повторите"
+
+    def run_audio(self, audio_paths):
+        play(AudioSegment.from_file(audio_paths, format="wav", channels=2))
 
     def answer_text_to_audio(self, text):
         sample_rate = 48000
-        speaker = 'baya'
+        if text == "":
+            return
+
+        speaker = 'eugene'
 
         audio_paths = self.model.save_wav(text=text,
                                           speaker=speaker,
                                           sample_rate=sample_rate)
-        audio = AudioSegment.from_file(audio_paths, format="wav")
-        play(audio)
+        p = multiprocessing.Process(target=self.run_audio(audio_paths))
+        p.start()

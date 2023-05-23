@@ -1,9 +1,11 @@
 import json
-import textHandler
-import audioProcessor
+from sys import exit
+
 import pvporcupine
 from pvrecorder import PvRecorder
-from sys import exit
+
+import audioProcessor
+import textHandler
 
 
 class Assistant:
@@ -16,7 +18,7 @@ class Assistant:
     def run(self):
         with open('data.json', 'r') as file:
             data = json.load(file)
-            key = data['key']
+            key = data['picovoice_key']
         access_key = key  # надо сделать интерфейс вставки своего ключа
         keyword_paths = ['data\\model_hey_quant.ppn']
 
