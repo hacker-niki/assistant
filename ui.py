@@ -30,7 +30,7 @@ class Manual(QWidget):
     def build(self):
         self.setGeometry(300, 300, 300, 300)
         hbox = QHBoxLayout(self)
-        pixmap = QPixmap("uiData/Квант.png")
+        pixmap = QPixmap("uiData/Manual.png")
         pixmap = pixmap.scaled(pixmap.width() // 2, pixmap.height() // 2)
         lbl = QLabel(self)
         lbl.setPixmap(pixmap)
