@@ -6,13 +6,6 @@ from tkinter import Tk, Canvas, Entry, Button, PhotoImage
 import sounddevice as sd
 from tkPDFViewer2 import tkPDFViewer as pdf
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame0")
-
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
 
 class App:
     window = Tk()
@@ -32,10 +25,10 @@ class App:
 
     canvas.place(x=0, y=0)
     entry_image_1 = PhotoImage(
-        file=relative_to_assets("entry_1.png"))
+        file=("uiData/entry_1.png"))
     entry_bg_1 = canvas.create_image(
         149.49999999999994,
-        89.00000000000003,
+        109.00000000000003,
         image=entry_image_1
     )
     entry_1 = Entry(
@@ -47,16 +40,16 @@ class App:
     )
     entry_1.place(
         x=64.99999999999994,
-        y=74.00000000000003,
+        y=94.00000000000003,
         width=169.0,
         height=28.0
     )
 
     entry_image_2 = PhotoImage(
-        file=relative_to_assets("entry_2.png"))
+        file="uiData/entry_2.png")
     entry_bg_2 = canvas.create_image(
         149.49999999999994,
-        150.00000000000003,
+        180.00000000000003,
         image=entry_image_2
     )
     entry_2 = Entry(
@@ -67,16 +60,16 @@ class App:
     )
     entry_2.place(
         x=64.99999999999994,
-        y=135.00000000000003,
+        y=165.00000000000003,
         width=169.0,
         height=28.0
     )
 
     entry_image_3 = PhotoImage(
-        file=relative_to_assets("entry_3.png"))
+        file="uiData/entry_3.png")
     entry_bg_3 = canvas.create_image(
         149.49999999999994,
-        211.00000000000003,
+        251.00000000000003,
         image=entry_image_3
     )
     entry_3 = Entry(
@@ -87,28 +80,7 @@ class App:
     )
     entry_3.place(
         x=64.99999999999994,
-        y=196.00000000000003,
-        width=169.0,
-        height=28.0
-    )
-
-    entry_image_4 = PhotoImage(
-        file=relative_to_assets("entry_4.png"))
-    entry_bg_4 = canvas.create_image(
-        149.49999999999994,
-        272.0,
-        image=entry_image_4
-    )
-    entry_4 = Entry(
-        bd=0,
-        bg="#5B4D71",
-        fg="#FFFFFF",
-
-        highlightthickness=0
-    )
-    entry_4.place(
-        x=64.99999999999994,
-        y=257.0,
+        y=236.00000000000003,
         width=169.0,
         height=28.0
     )
@@ -132,16 +104,7 @@ class App:
 
     canvas.create_text(
         52.99999999999994,
-        241.00000000000003,
-        anchor="nw",
-        text="OpenAI key",
-        fill="#7C829A",
-        font=("Inter", 11 * -1)
-    )
-
-    canvas.create_text(
-        52.99999999999994,
-        181.00000000000003,
+        216.00000000000003,
         anchor="nw",
         text="Picovoice key",
         fill="#7C829A",
@@ -150,7 +113,7 @@ class App:
 
     canvas.create_text(
         52.99999999999994,
-        118.00000000000003,
+        148.00000000000003,
         anchor="nw",
         text="Town",
         fill="#7C829A",
@@ -167,7 +130,7 @@ class App:
 
     canvas.create_text(
         51.99999999999994,
-        58.00000000000003,
+        75.00000000000003,
         anchor="nw",
         text="Username",
         fill="#7C829A",
@@ -175,7 +138,7 @@ class App:
     )
 
     button_image_1 = PhotoImage(
-        file=relative_to_assets("button_1.png"))
+        file="uiData/button_1.png")
     button_1 = Button(
         image=button_image_1,
         borderwidth=0,
@@ -191,7 +154,7 @@ class App:
     )
 
     button_image_2 = PhotoImage(
-        file=relative_to_assets("button_2.png"))
+        file="uiData/button_2.png")
     button_2 = Button(
         image=button_image_2,
         borderwidth=0,
@@ -207,7 +170,7 @@ class App:
     )
 
     button_image_3 = PhotoImage(
-        file=relative_to_assets("button_3.png"))
+        file="uiData/button_3.png")
     button_3 = Button(window,
                       image=button_image_3,
                       borderwidth=0,
@@ -263,13 +226,11 @@ def get_text():
     username = App.entry_1.get()
     town = App.entry_2.get()
     picovoice_key = App.entry_3.get()
-    openAI_key = App.entry_4.get()
 
     data = {
         "username": username,
         "town": town,
         "picovoice_key": picovoice_key,
-        "openAI_key": openAI_key,
         "language": "rus"
     }
 
@@ -279,7 +240,6 @@ def get_text():
     print(username)
     print(town)
     print(picovoice_key)
-    print(openAI_key)
 
     App.window.destroy()
 
@@ -290,12 +250,10 @@ def auto_fill():
     username = data['username']
     town = data['town']
     picovoice_key = data['picovoice_key']
-    openAI_key = data['openAI_key']
 
     App.entry_1.insert(0, username)
     App.entry_2.insert(0, town)
     App.entry_3.insert(0, picovoice_key)
-    App.entry_4.insert(0, openAI_key)
 
     print('Data autofilled')
 
