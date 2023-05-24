@@ -2,7 +2,6 @@ import json
 import multiprocessing
 import os
 import sys
-import threading
 
 from PyQt5 import QtCore, QtMultimedia
 from PyQt5 import uic
