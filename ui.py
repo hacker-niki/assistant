@@ -36,11 +36,11 @@ class Manual(QWidget):
         lbl.setPixmap(pixmap)
         hbox.addWidget(lbl)
         self.setLayout(hbox)
-
+        print(1)
         self.move(20, 20)
         self.setWindowTitle('Red Rock')
         self.setWindowTitle('MANUAL')
-##
+
 
 class MainWindow(QMainWindow):
     tray_icon = None
