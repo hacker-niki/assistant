@@ -1,5 +1,4 @@
 import json
-import multiprocessing
 import os
 import traceback
 
@@ -101,5 +100,4 @@ class AudioProcessor:
         audio_paths = self.model.save_wav(text=text_input,
                                           speaker=speaker,
                                           sample_rate=sample_rate)
-        p = multiprocessing.Process(target=self.run_audio(audio_paths))
-        p.start()
+        self.run_audio(audio_paths)

@@ -213,7 +213,7 @@ class MainWindow(QMainWindow):
     def open_new_window(self):
         global amount
         amount += 1
-        if (amount == 1):
+        if amount == 1:
             window = FirstWindow.App()
             FirstWindow.auto_fill()
             FirstWindow.App.window.mainloop()
@@ -249,5 +249,4 @@ def main():
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
-    p = threading.Thread(target=main())
-    p.start()
+    main()
