@@ -1,6 +1,5 @@
 import json
 import tkinter as tk
-from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage
 
 import sounddevice as sd

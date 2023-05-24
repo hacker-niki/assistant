@@ -2,24 +2,23 @@ import json
 import multiprocessing
 import os
 import sys
-from PyQt5 import uic
-from PyQt5.QtWidgets import *
-from PyQt5.QtWidgets import (QWidget)
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox, QHBoxLayout
+import threading
+
 from PyQt5 import QtCore, QtMultimedia
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QSystemTrayIcon, QMenu, QAction, QPushButton
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
 from PyQt5.QtWidgets import QComboBox
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QSystemTrayIcon, QMenu, QAction
+from PyQt5.QtWidgets import (QWidget)
 
 import FirstWindow
 from app import startAssistant
 
 amount = 0
+
 
 class Manual(QWidget):
     def __init__(self,
@@ -44,6 +43,7 @@ class Manual(QWidget):
 
 class MainWindow(QMainWindow):
     tray_icon = None
+
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('uiData/form1.ui', self)
@@ -56,11 +56,11 @@ class MainWindow(QMainWindow):
         self.height_video = 350
         self.setFixedSize(self.width_video, self.height_video)
 
-        #self.pushButton_start = PushButton_log_in(self)
-        #self.pushButton_start.move(20, 20)
+        # self.pushButton_start = PushButton_log_in(self)
+        # self.pushButton_start.move(20, 20)
 
-        #self.pushButton2 = PushButton_start(self)
-        #self.pushButton2.move(190, 300)
+        # self.pushButton2 = PushButton_start(self)
+        # self.pushButton2.move(190, 300)
 
         # Определение вариантов ответов
         self.variant_options = ['rus', 'eng']
@@ -94,7 +94,6 @@ class MainWindow(QMainWindow):
                                                                  font-family: Arial;\
                                                                  font-weight: 1px;\
                                                                  font-size: 15px;}')
-
 
         # Создание элементов окна
         self.buttonCombo = QComboBox(self)
@@ -205,9 +204,8 @@ class MainWindow(QMainWindow):
                 print(data)
 
                 self.hide()
-                t = multiprocessing.Process(target=startAssistant())
+                t = multiprocessing.Process(target=startAssistant)
                 t.start()
-                t.join()
 
         else:
             self.open_new_window()
@@ -221,6 +219,7 @@ class MainWindow(QMainWindow):
             FirstWindow.App.window.mainloop()
         else:
             show_message()
+
 
 def show_message():
     msg_box = QMessageBox()
@@ -240,10 +239,15 @@ def show_message():
         print("Нажата другая кнопка")
 
 
-if __name__ == '__main__':
-    multiprocessing.freeze_support()
+def main():
     app = QApplication(sys.argv)
     ex = MainWindow()
     ex.move(100, 100)
     ex.show()
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    multiprocessing.freeze_support()
+    p = threading.Thread(target=main())
+    p.start()
