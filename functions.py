@@ -24,13 +24,10 @@ from audioProcessor import AudioProcessor
 from user import client
 
 
-def changeNumberIntoLetter(value):
-    number = numToLetter(value)
-    return number
-
-
-def numToLetter(value):  # The function converts the numbers into letters.
-    if value == 1:
+def numToLetter(value):
+    if value == 0:
+        return ''
+    elif value == 1:
         return 'one'
     elif value == 2:
         return 'two'
@@ -58,69 +55,55 @@ def numToLetter(value):  # The function converts the numbers into letters.
         return 'thirteen'
     elif 13 < value <= 19:
         return composeTeen(value)
-    elif value > 19:
-        if value == 20:
-            return 'twenty'
-        elif value == 30:
-            return 'thirty'
-        elif value == 50:
-            return 'fifty'
-        elif value == 10 ** 2:
-            return 'one hundred'
-        elif value == 10 ** 3:
-            return 'one thousand'
-        elif value == 10 ** 5:
-            return 'one hundred thousand'
-        elif value == 10 ** 6:
-            return 'one milion'
-        elif value >= 20:
-            return composeNumbers(value)
-        else:
-            exit('Out of range')
+    elif value >= 20 and value < 100:
+        return composeTens(value)
+    elif value >= 100 and value < 1000:
+        return composeHundreds(value)
+    elif value >= 1000 and value < 1000000:
+        return composeThousands(value)
     else:
-        return ''
+        return 'Out of range'
 
 
-def composeNumbers(value):  # The function build every number biger than 40
-    if 40 <= value < 10 ** 2:
-        value1 = int(str(value)[0])
-        value2 = int(str(value)[1])
-        if value1 == 2:
-            value1 = 'twen'
-            return value1 + 'ty' + '-' + numToLetter(value2)
-        if value1 == 3:
-            value1 = 'thir'
-            return value1 + 'ty' + '-' + numToLetter(value2)
-        if value1 == 8:
-            value1 = 'eigh'
-            return value1 + 'ty' + '-' + numToLetter(value2)
-        elif value1 == 5:
-            value1 = 'fif'
-            return value1 + 'ty' + '-' + numToLetter(value2)
-        return numToLetter(value1) + 'ty' + '-' + numToLetter(value2)
-    elif 10 ** 2 <= value < 10 ** 3:
-        value1 = int(str(value)[0])
-        value2 = int(str(value)[1:])
-        return numToLetter(value1) + ' ' + 'hundred' + ' ' + numToLetter(value2)
-    elif 10 ** 3 <= value < 10 ** 4:
-        value1 = int(str(value)[0])
-        value2 = int(str(value)[1:])
-    elif 10 ** 4 <= value < 10 ** 5:
-        value1 = int(str(value)[0:2])
-        value2 = int(str(value)[2:])
-    elif 10 ** 5 <= value < 10 ** 6:
-        value1 = int(str(value)[0:3])
-        value2 = int(str(value)[3:])
-    return numToLetter(value1) + ' ' + 'thousand' + ' ' + numToLetter(value2)
+def composeTeen(value):
+    value = int(str(value)[-1])
+    if value == 8:
+        return 'eighteen'
+    else:
+        return numToLetter(value) + 'teen'
 
 
-def composeTeen(value):  # The function takes the unit and then converts it into letter to build the word.
-    value = int(str(value)[
-                    -1])  # It turns elem in string to take the last position and it converts it again in integer to change it in letters. Then it composes the word adding 'teen' at the end.
-    value = numToLetter(value)
-    if value == 'five': value = 'fif'
-    value = value + 'teen'
-    return value
+def composeTens(value):
+    tens = {2: 'twenty', 3: 'thirty', 4: 'forty', 5: 'fifty', 6: 'sixty', 7: 'seventy', 8: 'eighty', 9: 'ninety'}
+    first_digit = value // 10
+    second_digit = value % 10
+    if second_digit == 0:
+        return tens[first_digit]
+    else:
+        return tens[first_digit] + '-' + numToLetter(second_digit)
+
+
+def composeHundreds(value):
+    first_digit = value // 100
+    remainder = value % 100
+    if remainder == 0:
+        return numToLetter(first_digit) + ' hundred'
+    else:
+        return numToLetter(first_digit) + ' hundred and ' + numToLetter(remainder)
+
+
+def composeThousands(value):
+    first_part = value // 1000
+    second_part = value % 1000
+    if second_part == 0:
+        return numToLetter(first_part) + ' thousand'
+    else:
+        return numToLetter(first_part) + ' thousand, ' + numToLetter(second_part)
+
+
+def changeNumberIntoLetter(value):
+    number = numToLetter(value)
+    return number
 
 
 def extract_city_function(command: str):
