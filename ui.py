@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import (QWidget)
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QMessageBox, QComboBox, QHBoxLayout
 from PyQt5 import QtCore, QtMultimedia
 from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QSystemTrayIcon, QMenu, QAction, QPushButton
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QPixmap
@@ -18,78 +20,6 @@ import FirstWindow
 from app import startAssistant
 
 amount = 0
-
-
-class PushButton_start(QPushButton):
-    def __init__(self, parent=None):
-        super(PushButton_start, self).__init__(parent)
-        self.setIcon(QIcon('uiData/start_light.png'))
-        self.setIconSize(QSize(100, 100))
-
-    def mousePressEvent(self, event):
-        self.setIcon(QIcon('uiData/start_dark.png'))
-        self.setIconSize(QSize(100, 100))
-        self.start_button_pressed()
-
-    def mouseReleaseEvent(self, event):
-        self.setIcon(QIcon('uiData/start_light.png'))
-        self.setIconSize(QSize(100, 100))
-
-    def start_button_pressed(self):
-        if os.stat('data.json').st_size != 0:
-            with open("data.json", "r") as f:
-                data = json.load(f)
-                username = data['username']
-                town = data['town']
-                picovoice_key = data['picovoice_key']
-
-                language = data['language']
-                if (username == '') | (town == '') | (picovoice_key == ''):
-                    self.open_new_window()
-                print(data)
-                t = multiprocessing.Process(target=startAssistant())
-                t.start()
-                t.join()
-        else:
-            self.open_new_window()
-
-    def open_new_window(self):
-        global amount
-        amount += 1
-        if (amount == 1):
-            window = FirstWindow.App()
-            FirstWindow.auto_fill()
-            FirstWindow.App.window.mainloop()
-        else:
-            show_message()
-
-
-class PushButton_log_in(QPushButton):
-    def __init__(self, parent=None):
-        super(PushButton_log_in, self).__init__(parent)
-        self.setIcon(QIcon('uiData/log_in_light.png'))
-        self.setIconSize(QSize(100, 100))
-
-    def mousePressEvent(self, event):
-        self.setIcon(QIcon('uiData/log_in_dark.png'))
-        self.setIconSize(QSize(100, 100))
-
-        self.open_new_window()
-
-    def mouseReleaseEvent(self, event):
-        self.setIcon(QIcon('uiData/log_in_light.png'))
-        self.setIconSize(QSize(100, 100))
-
-    def open_new_window(self):
-        global amount
-        amount += 1
-        if (amount == 1):
-            window = FirstWindow.App()
-            FirstWindow.auto_fill()
-            print(1)
-            FirstWindow.App.window.mainloop()
-        else:
-            show_message()
 
 class Manual(QWidget):
     def __init__(self,
@@ -113,50 +43,76 @@ class Manual(QWidget):
 
 
 class MainWindow(QMainWindow):
+    tray_icon = None
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('uiData/form1.ui', self)
         self.setWindowTitle("Quant")
-        self.setStyleSheet("background-color: #000000;")
-        self.path_to_silent_video = 'uiData/silent_video.avi'
-        self.path_to_speech_video = 'uiData/speaking_video.avi'
+        self.setStyleSheet("background-color: #7e7e7e;")
+        self.path_to_silent_video = 'uiData/video.avi'
+        self.path_to_speech_video = 'uiData/video.avi'
 
         self.width_video = 470
         self.height_video = 350
         self.setFixedSize(self.width_video, self.height_video)
 
-        self.pushButton = PushButton_log_in(self)
-        self.pushButton.move(20, 20)
+        #self.pushButton_start = PushButton_log_in(self)
+        #self.pushButton_start.move(20, 20)
 
-        self.pushButton2 = PushButton_start(self)
-        self.pushButton2.move(190, 300)
-
-        self.label = QLabel(self)
-        self.label.move(330, 270)
-        self.label.setFixedWidth(150)
-        self.label.setStyleSheet("background: black;")
+        #self.pushButton2 = PushButton_start(self)
+        #self.pushButton2.move(190, 300)
 
         # Определение вариантов ответов
         self.variant_options = ['rus', 'eng']
 
+        self.pushButton_log_in = QPushButton("LOG IN", self)
+        self.pushButton_log_in.move(20, 20)
+        self.pushButton_log_in.clicked.connect(self.open_new_window)
+
+        # Установка стиля
+        self.pushButton_log_in.setStyleSheet('QPushButton::drop-down {border: none;} \
+                                                                         QPushButton::down-arrow \
+                                                                         {image: url(down_arrow.png);} \
+                                                                         QPushButton {border-radius: 15px; \
+                                                                         background-color: #9d3abf;\
+                                                                         color: white; \
+                                                                         font-family: Arial;\
+                                                                         font-weight: 1px;\
+                                                                         font-size: 15px;}')
+
+        self.pushButton_start = QPushButton("START", self)
+        self.pushButton_start.move(350, 300)
+        self.pushButton_start.clicked.connect(self.start_button_pressed)
+
+        # Установка стиля
+        self.pushButton_start.setStyleSheet('QPushButton::drop-down {border: none;} \
+                                                                 QPushButton::down-arrow \
+                                                                 {image: url(down_arrow.png);} \
+                                                                 QPushButton {border-radius: 15px; \
+                                                                 background-color: #9d3abf;\
+                                                                 color: white; \
+                                                                 font-family: Arial;\
+                                                                 font-weight: 1px;\
+                                                                 font-size: 15px;}')
+
+
         # Создание элементов окна
         self.buttonCombo = QComboBox(self)
-        self.buttonCombo.move(130, 20)
+        self.buttonCombo.move(387, 60)
         self.buttonCombo.setFixedSize(65, 31)
         self.buttonCombo.addItems(self.variant_options)
         self.buttonCombo.currentIndexChanged.connect(self.onClick)
 
         # Установка стиля
-        self.buttonCombo.setStyleSheet('QComboBox::drop-down {border: none;} \
-                                                 QComboBox::down-arrow \
-                                                 {image: url(down_arrow.png);} \
+        self.buttonCombo.setStyleSheet('QComboBox::drop-down {width: 20px;} \
+        QComboBox::down-arrow {image: url(down_arrow.png); width: 10px;}\
                                                  QComboBox {border-radius: 15px; \
-                                                 padding: 1px 18px 1px 3px; \
+                                                 padding: 1px 10px 1px 15px; \
                                                  background-color: #9d3abf;\
                                                  color: white; \
                                                  font-size: 15px;}')
 
-        self.buttonManual = QPushButton('  MANUAL', self)
+        self.buttonManual = QPushButton('MANUAL', self)
         self.buttonManual.resize(85, 31)
         self.buttonManual.move(370, 20)
         self.buttonManual.clicked.connect(self.openMan)
@@ -166,8 +122,8 @@ class MainWindow(QMainWindow):
                                                          QPushButton::down-arrow \
                                                          {image: url(down_arrow.png);} \
                                                          QPushButton {border-radius: 15px; \
-                                                         padding: 1px 18px 1px 3px; \
                                                          background-color: #9d3abf;\
+                                                         font-family: Arial;\
                                                          color: white; \
                                                          font-size: 13px;}')
 
@@ -182,6 +138,15 @@ class MainWindow(QMainWindow):
         self.media1.play()
         # Отслеживаем статус видео, чтобы скрыть его после проигрывания.
         self.media1.mediaStatusChanged.connect(self.start_new_video)
+
+        self.tray_icon = QSystemTrayIcon(self)
+        self.tray_icon.setIcon(QIcon('uiData/icon.png'))
+        start_action = QAction("MANUAL", self)
+        start_action.triggered.connect(self.openMan)
+        tray_menu = QMenu()
+        tray_menu.addAction(start_action)
+        self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.show()
 
     # Функция, запускающая видео
     def start_new_video(self, status):
@@ -223,6 +188,39 @@ class MainWindow(QMainWindow):
         self.manual = Manual(self)  # здесь можешь передавать аргументы во второе окно (nameofargument, self)
         self.manual.show()
 
+    def hideMainWindow(self):
+        self.hide()
+
+    def start_button_pressed(self):
+        if os.stat('data.json').st_size != 0:
+            with open("data.json", "r") as f:
+                data = json.load(f)
+                username = data['username']
+                town = data['town']
+                picovoice_key = data['picovoice_key']
+
+                language = data['language']
+                if (username == '') | (town == '') | (picovoice_key == ''):
+                    self.open_new_window()
+                print(data)
+
+                self.hide()
+                t = multiprocessing.Process(target=startAssistant())
+                t.start()
+                t.join()
+
+        else:
+            self.open_new_window()
+
+    def open_new_window(self):
+        global amount
+        amount += 1
+        if (amount == 1):
+            window = FirstWindow.App()
+            FirstWindow.auto_fill()
+            FirstWindow.App.window.mainloop()
+        else:
+            show_message()
 
 def show_message():
     msg_box = QMessageBox()
