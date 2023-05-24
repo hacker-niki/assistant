@@ -241,6 +241,7 @@ def show_message():
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     app = QApplication(sys.argv)
     ex = MainWindow()
     ex.move(100, 100)

@@ -1,3 +1,5 @@
+import multiprocessing
+
 from assistant import Assistant
 
 
@@ -10,4 +12,5 @@ def startAssistant():
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     startAssistant()

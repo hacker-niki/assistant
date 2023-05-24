@@ -9,7 +9,6 @@ import webbrowser
 from ctypes import cast, POINTER
 
 import keyboard
-import openai
 import pyautogui as pg
 import pybrightness
 import requests
@@ -313,28 +312,6 @@ def key_board_function(a) -> str:
     return ""
 
 
-def say_function(a) -> str:
-    sentence = "расскажи " + ''.join(a)
-    print(sentence)
-    openai.api_key = "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"
-    model_engine = "text-davinci-002"
-    openai.api_base = "https://api.openai.com/v1/"
-
-    completions = openai.Completion.create(
-        engine=model_engine,
-        prompt=sentence,
-        max_tokens=2000,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
-
-    message = completions.choices[0].text
-    generated_text = message.strip()
-
-    return generated_text
-
-
 def coin_function(a) -> str:
     random_number = random.randint(0, 2)
     if random_number == 0:
@@ -386,7 +363,8 @@ def run_app(best_match):
 def app_function(app_name) -> str:
     print(app_name)
     app_name = app_name.lower()
-    program_files = ["C:/Program Files/", "C:/Program Files (x86)/"]
+    program_files = ["C:/Program Files/", "C:/Program Files (x86)/", str(os.getenv('APPDATA')),
+                     str(os.getenv('LOCALAPPDATA'))]
 
     def find_apps(root, app_name):
         best_score = 0
@@ -399,9 +377,11 @@ def app_function(app_name) -> str:
                     folder_name = path.split(os.sep)[-1].lower()
 
                     exe_score = fuzz.partial_ratio(app_name, exe_name)
+                    print(exe_name)
+
                     folder_score = fuzz.partial_ratio(app_name, folder_name)
 
-                    total_score = 0.6 * exe_score + 0.4 * folder_score
+                    total_score = 0.8 * exe_score + 0.2 * folder_score
 
                     if total_score > best_score:
                         best_score = total_score
@@ -420,7 +400,9 @@ def app_function(app_name) -> str:
                 best_score = score
                 best_match = match
 
-    if best_match:
+    if best_match and best_score > 15:
+        print(best_match)
+        print(best_score)
         run_app(best_match=best_match)
         return "Открываю."
     else:

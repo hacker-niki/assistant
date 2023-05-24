@@ -43,11 +43,11 @@ class Assistant:
                 recorder.stop()
                 while True:
                     command = self.recognize_speech()
-                    # try:
-                    answer = self.handler.map_string_to_function(command)
-                    # except:
-                    #     self.audio.answer_text_to_audio("Ошибка во время выполнения функции!")
-                    #     break
+                    try:
+                        answer = self.handler.map_string_to_function(command)
+                    except:
+                        self.audio.answer_text_to_audio("Ошибка во время выполнения функции!")
+                        break
                     if not answer[0]:
                         self.audio.answer_text_to_audio("Завершаю работу")
                         exit(0)
