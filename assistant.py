@@ -24,8 +24,6 @@ class Assistant:
             key = data['picovoice_key']
         access_key = key  # надо сделать интерфейс вставки своего ключа
         keyword_paths = ['data\\model_hey_quant.ppn']
-        handle = None
-        recorder = None
         try:
             handle = pvporcupine.create(access_key=access_key, keyword_paths=keyword_paths, sensitivities=[0.7])
             recorder = PvRecorder(device_index=-1, frame_length=512)
@@ -34,8 +32,6 @@ class Assistant:
             return
 
         while True:
-            pcm = None
-            keyword_index = None
             try:
                 recorder.start()
                 pcm = recorder.read()
@@ -47,19 +43,21 @@ class Assistant:
                 recorder.stop()
                 while True:
                     command = self.recognize_speech()
+                    # try:
                     answer = self.handler.map_string_to_function(command)
+                    # except:
+                    #     self.audio.answer_text_to_audio("Ошибка во время выполнения функции!")
+                    #     break
                     if not answer[0]:
                         self.audio.answer_text_to_audio("Завершаю работу")
                         exit(0)
                     try:
                         self.audio.answer_text_to_audio(answer[1])
-                        break
                     except:
                         self.audio.answer_text_to_audio("Ошибка во время выполнения функции!")
-                        break
+                    break
 
-
-# Функция для распознавания речи
+    # Функция для распознавания речи
     def recognize_speech(self):
         # os.remove("microphone-results.wav")
         self.audio.answer_text_to_audio("Да, господин")
