@@ -22,32 +22,26 @@ class AudioProcessor:
             torch.set_num_threads(4)
             russian_tts = 'data/model_ru.pt'
             english_tts = 'data/model_en.pt'
-            self.lang = 'rus'
-            tts = None
             with open('data.json', 'r') as file:
                 data = json.load(file)
                 key = data['language']
+                print(key)
                 if key == 'rus':
                     tts = russian_tts
+                    self.lang = 'rus'
                 else:
                     tts = english_tts
                     self.lang = 'eng'
                     self.translator = Translator()
-            print(1)
             if not os.path.isfile(russian_tts):
                 torch.hub.download_url_to_file('https://models.silero.ai/models/tts/ru/v3_1_ru.pt',
                                                russian_tts)
             if not os.path.isfile(english_tts):
                 torch.hub.download_url_to_file('https://models.silero.ai/models/tts/en/v3_en.pt',
                                                english_tts)
-            print(1)
             self.model = torch.package.PackageImporter(tts).load_pickle("tts_models", "model")
-            print(1)
             self.model.to(device)
-            print(1)
-            print(sr.Microphone.list_working_microphones())
             self.microphone = sr.Microphone()
-            print(1)
             with self.microphone:
                 self.recognizer.adjust_for_ambient_noise(self.microphone, duration=1)
 

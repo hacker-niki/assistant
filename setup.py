@@ -31,7 +31,8 @@ build_exe_options = {
         "PyQt5",
         "wikipedia",
         "openai",
-        "tkPDFViewer2"
+        "tkPDFViewer2",
+        "num-to-rus"
     ],
     "packages": ["os", "sys"],
     "include_files": [
